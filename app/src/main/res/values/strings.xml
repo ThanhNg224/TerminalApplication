@@ -1,0 +1,338 @@
+<resources>
+    <string name="app_name">ATIN Smartface</string>
+    <string name="app_version">1.0.0</string>
+
+    <string name="label_user_name">Full name:</string>
+    <string name="label_department_name">Department:</string>
+    <string name="label_position_name">Position:</string>
+    <string name="label_person_code">Employee code:</string>
+    <string name="label_vaccine">Vaccination:</string>
+    <string name="label_job_name">Job duty:</string>
+    <string name="label_body_temperature">Body temperature</string>
+    <string name="label_device_info">Device info</string>
+    <string name="label_system_info">Server info</string>
+    <string name="label_check_update_version">Check for upgrade</string>
+    <string name="label_update_system">Upgrade</string>
+    <string name="label_display">Display info</string>
+    <string name="label_company_name">Organization name</string>
+    <string name="label_ip_address">IP address</string>
+    <string name="label_device_code">Device code</string>
+    <string name="label_mac_address">MAC address</string>
+    <string name="label_version">Version</string>
+    <string name="label_imei">IMEI number</string>
+    <string name="label_face_dection_angle">Face detect angle</string>
+    <string name="label_config_application">Application setting</string>
+    <string name="label_config_temperature_camera">Thermal sensing setting</string>
+    <string name="label_config_process_image">Image processing setting</string>
+    <string name="label_liveness_detect">Liveness detection</string>
+    <string name="label_recognize_face_mask">Face mask detect</string>
+    <string name="label_use_led">Using led</string>
+    <string name="label_hide_navigator_bar">Hide navigator bar</string>
+    <string name="label_hide_status_bar">Hide status bar</string>
+    <string name="label_use_sound">Using speaker</string>
+    <string name="label_use_temperature_camera">Using thermal sensing</string>
+    <string name="label_distance_calibration">Distance to the device (cm)</string>
+    <string name="label_warning_hight_temperature">High temperature warning</string>
+    <string name="label_not_allow_hight_temperature">Do not allow entry or exit when body temperature is high</string>
+    <string name="label_calibration_temperature_camera">Thermal sensing calibration</string>
+    <string name="label_admin_permission_request">Grant administrator permission</string>
+    <string name="label_time_between_recognize">Time between 2 recognition times (second)</string>
+    <string name="label_time_keep_open_door">Recognize between time (millisecond)</string>
+    <string name="label_time_open_door_parent">Door keeping time for authorized person(second)</string>
+    <string name="label_time_distance_detect">Recognition distance (20 - 100 cm)</string>
+    <string name="label_max_threshold_temperature">Temperature alert threshold</string>
+    <string name="label_automatic_start">Start app automatically</string>
+    <string name="label_automatic_sleep">Sleep screen automatically</string>
+    <string name="label_no_delay">Recognize immediately the new face</string>
+    <string name="label_use_card">Using NFC card</string>
+    <string name="label_offline">Cloud authentication</string>
+    <string name="label_save_person_unreg">Record stranger</string>
+    <string name="label_show_person_code">Show employee code/Hide position and department</string>
+    <string name="label_show_vaccine">Display vaccination info</string>
+    <string name="label_show_personCode">Display personCode</string>
+    <string name="label_check_access_business">Check access permission</string>
+    <string name="label_check_mask">Check face mask</string>
+    <string name="label_show_temperature">Show body temperature</string>
+    <string name="label_check_temperature">Check body temperature</string>
+    <string name="label_function">Function of the device</string>
+    <string name="label_liveness_level">Checking liveness level</string>
+    <string name="label_pccovid">Check pccovid</string>
+    <string name="label_language">Language</string>
+    <string name="label_face_recognize_parameter">Face recognition parameter</string>
+    <string name="label_face_threshold">Recognition score threshold (0.75 - 1)</string>
+    <string name="label_nomask_quality_threshold">Quality of image without mask (0.49 - 1)</string>
+    <string name="label_mask_quality_threshold">Quality of image have mask (0.29 - 1)</string>
+    <string name="label_register_quality_threshold">Quality of image register (0.63 - 1)</string>
+    <string name="label_temperature_threshold">High temperature threshold (°C)</string>
+    <string name="label_min_face_size">Minimum photo size</string>
+    <string name="label_living_threshold">Number of checking per person (1-5)</string>
+    <string name="label_server_parameter">Server information</string>
+    <string name="label_bussiness_server_host">Domain/IP</string>
+    <string name="label_authentication_username">Username</string>
+    <string name="label_authentication_password">Password</string>
+    <string name="label_update">Upgrade</string>
+    <string name="label_download_and_update">Download and upgrade</string>
+    <string name="label_restart_header">Daily auto reboot configuration</string>
+    <string name="label_use_auto_reboot">Use daily reboot</string>
+    <string name="label_time_reboot">Reboot time</string>
+    <string name="label_active_code">Activation key</string>
+    <string name="label_app_id">APP ID</string>
+    <string name="label_active_file_name">active_result.dat</string>
+    <string name="preference_app_id">app_id</string>
+    <string name="preference_sdk_key">sdk_key</string>
+    <string name="preference_active_key">active_key</string>
+    <string name="preference_app_version">app_version</string>
+    <string name="label_login_information">Login information</string>
+    <string name="label_pin">PIN</string>
+    <string name="label_login_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="label_old_password">Old password</string>
+    <string name="label_new_password">New password</string>
+    <string name="label_repeat_password">Repeat password</string>
+    <string name="label_change_password">Change password</string>
+    <string name="label_forgot_password">Forgot password</string>
+    <string name="label_reset_code">Restore code</string>
+    <string name="label_login">Login</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_close">Close</string>
+    <string name="label_apply">Apply</string>
+    <string name="label_confirm_selected">CONFIRM</string>
+    <string name="label_clear_event">DELETE ALL EVENTS LOG</string>
+    <string name="label_clear_all">DELETE ALL DATA</string>
+    <string name="label_hight_body_temperature">WARNING HIGH BODY TEMPERATURE</string>
+    <string name="label_not_wear_mask">WARNING NOT WEAR MASK</string>
+    <string name="label_not_access_permission">NO ACCESS PERMISSION</string>
+    <string name="label_access_time_expired">ACCESS PERMISSION EXPIRED</string>
+    <string name="label_person_not_found">PERSON NOT FOUND</string>
+    <string name="label_out_off_time">OUT OFF ACCESS TIME</string>
+    <string name="label_device_not_define">MACHINE NOT DEFINE</string>
+    <string name="label_missing_access_permission">MISSING ACCESS PERMISSION</string>
+    <string name="label_list_twin">LIST TWINS</string>
+    <string name="label_door_type">The door type</string>
+    <string name="label_wait_door_time">Wait door time (millisecond)</string>
+
+    <string name="button_shutdown">Shutdown</string>
+    <string name="button_home_screen">Home</string>
+    <string name="button_reboot">Reboot</string>
+    <string name="button_clear_event_log">Clear event log</string>
+    <string name="button_clear_all">Clear all data</string>
+    <string name="button_screen_off">Turn Off Screen</string>
+    <string name="button_options">Options</string>
+    <string name="button_save">Save</string>
+    <string name="button_close">Close</string>
+    <string name="button_database">Gallery</string>
+    <string name="button_active_offline">Active offline</string>
+    <string name="button_active_online">Active online</string>
+    <string name="button_calibration">calibrate</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="button_event">Report</string>
+
+    <!--Message log -->
+    <string name="message_latest_version">Version is latest</string>
+    <string name="message_notification_update_firmware">Show notification update firmware</string>
+    <string name="message_md5_correct">MD5 is correct</string>
+    <string name="message_md5_not_correct_try_download">MD5 is not correct try to download</string>
+    <string name="message_donwload_firmware_success">Download firmware finish</string>
+    <string name="message_start_download_firmware">Start download firmware</string>
+    <string name="message_nfc_notsupport">The device does not support NFC</string>
+    <string name="message_nfc_working">Please Swipe Your Card</string>
+    <string name="message_nfc_notwork">Please Go To Settings And Open The NFC Switch</string>
+    <string name="message_infor_login_incorrect">Login information is incorrect</string>
+    <string name="message_config_error">Device identification failed</string>
+    <string name="message_action_failed">Action failed</string>
+    <string name="message_action_failed_summary">Root is needed. Please enable root.</string>
+    <string name="message_tooltip_calibration_camera">- Keep your face in the centre of device screen, the distance from the device to your face is about 50cm, then press Calibrate.\n - Do not move your head until calibration complete.\n - During calibration, it is recommended to use a person with a normal temperature.</string>
+    <string name="msg_server_error">Error connect to server</string>
+    <string name="msg_data_server_error">Error server 500</string>
+    <string name="msg_null_auth_server">Username or password is incorrect</string>
+    <string name="msg_timeout_error">Connect to server is timeout</string>
+    <string name="msg_connect_error">Error connection</string>
+    <string name="msg_authenticate_error">Authenticate to server failure</string>
+    <string name="message_firmware_status">New update version %1$s</string>
+    <string name="message_request_synchronize_failure">Create request is failure</string>
+    <string name="message_update_firmware">Install update version %1$s</string>
+    <string name="message_specific_engine_init_failed">%s init failed, code is:%d</string>
+    <string name="message_camera_error_notice">Not allowed open multiple cameras at the same time on this device</string>
+    <string name="message_permission_denied">Permission denied!</string>
+    <string name="message_processing">Processing...</string>
+    <string name="message_device_not_support">Device not support</string>
+    <string name="message_clear_event">Do you want to clear all event log in the device?</string>
+    <string name="message_clear_all">Do you want to clear all data in the device?</string>
+    <string name="message_confirm_selected">You are solely responsible for your choices if any misconduct is detected?</string>
+    <string name="message_score_matching_invalid">Recognition score threshold between 0.75 - 1</string>
+    <string name="message_distance_invalid">Distance detect between 20 - 100 cm</string>
+    <string name="message_delay_time_invalid">The time in 2 recognization between 1000 - 10.000 (ms)</string>
+    <string name="message_update_success">Upgrade successful</string>
+    <string name="message_administrator_on">Grant administration successful</string>
+    <string name="message_administrator_off">Grant administration unsuccessful</string>
+    <string name="message_tooltip_login">Need %1$s time to enable setting function</string>
+    <string name="messge_error_config_device">Error config the device</string>
+    <string name="message_error_confirm_password">Retype password mismatch</string>
+    <string name="message_error_null_username">The username is required</string>
+    <string name="message_error_null_password">The password is required</string>
+    <string name="message_error_current_password_incorrect">Current password is incorrect</string>
+    <string name="message_error_recovery_code_incorrect">Recovery code is incorrect</string>
+    <string name="message_error_new_password_required">The new password is required</string>
+    <string name="message_error_retype_password_required">The retype password is required</string>
+    <string name="message_error_retype_password_invalid">The length of password must be between 6 - 20 symbol</string>
+    <string name="message_account_suppend">Account is suppend</string>
+
+    <!-- preference key-->
+    <string name="preference_switch_camera">switch_camera</string>
+    <string name="preference_dual_camera_offset_horizontal">dual_camera_offset_horizontal</string>
+    <string name="preference_dual_camera_offset_vertical">dual_camera_offset_vertical</string>
+    <string name="preference_draw_rgb_rect_horizontal_mirror">draw_rgb_rect_horizontal_mirror</string>
+    <string name="preference_draw_rgb_rect_vertical_mirror">draw_rgb_rect_vertical_mirror</string>
+    <string name="preference_draw_ir_rect_horizontal_mirror">draw_ir_rect_horizontal_mirror</string>
+    <string name="preference_draw_ir_rect_vertical_mirror">draw_ir_rect_vertical_mirror</string>
+    <string name="preference_rgb_preview_horizontal_mirror">rgb_preview_horizontal_mirror</string>
+    <string name="preference_ir_preview_horizontal_mirror">ir_preview_horizontal_mirror</string>
+    <string name="preference_rgb_camera_rotation">rgb_camera_rotation</string>
+    <string name="preference_ir_camera_rotation">ir_camera_rotation</string>
+    <string name="preference_liveness_detect_type">liveness_detect_type</string>
+    <string name="preference_rgb_liveness_detect">rgb_liveness_detect</string>
+    <string name="preference_ir_liveness_detect">ir_liveness_detect</string>
+    <string name="preference_recognize_keep_max_face">keep_max_face</string>
+    <string name="preference_recognize_limit_recognize_area">limit_recognize_area</string>
+    <string name="preference_recognize_max_detect_num">max_detect_num</string>
+    <string name="preference_recognize_scale_value">scale_value</string>
+    <string name="preference_choose_detect_degree">choose_detect_degree</string>
+    <string name="preference_track_face_count">track_face_count</string>
+    <string name="preference_recognize_threshold">recognize_threshold</string>
+    <string name="preference_recognize_face_size_limit">recognize_face_size_limit</string>
+    <string name="preference_recognize_move_pixel_limit">recognize_move_pixel_limit</string>
+    <string name="preference_rgb_liveness_threshold">rgb_liveness_threshold</string>
+    <string name="preference_ir_liveness_threshold">ir_liveness_threshold</string>
+    <string name="preference_liveness_fq_threshold">liveness_fq_threshold</string>
+    <string name="preference_dual_camera_preview_size">dual_camera_preview_size</string>
+    <string name="preference_enable_image_quality_detect">enable_image_quality_detect</string>
+    <string name="preference_enable_face_size_limit">enable_face_size_limit</string>
+    <string name="preference_enable_face_move_limit">enable_face_move_limit</string>
+    <string name="preference_image_quality_no_mask_recognize_threshold">image_quality_no_mask_recognize_threshold</string>
+    <string name="preference_image_quality_no_mask_register_threshold">image_quality_no_mask_register_threshold</string>
+    <string name="preference_image_quality_mask_recognize_threshold">image_quality_mask_recognize_threshold</string>
+    <string name="preference_compare_ir_and_rgb_threshold_threshold">compare_ir_and_rgb_threshold_threshold</string>
+
+    <!--untranslatable-->
+    <string name="language_vietnamese" translatable="false">Vietnamese</string>
+    <string name="language_english" translatable="false">English</string>
+    <string name="language_japanese" translatable="false">日本の</string>
+
+    <string-array name="language_names">
+        <item>@string/language_vietnamese</item>
+        <item>@string/language_english</item>
+<!--        <item>@string/language_japanese</item>-->
+    </string-array>
+
+    <string name="language_vietnamese_code" translatable="false">vi</string>
+    <string name="language_english_code" translatable="false">en</string>
+    <string name="language_japanese_code" translatable="false">ja</string>
+
+    <string-array name="language_codes">
+        <item>@string/language_vietnamese_code</item>
+        <item>@string/language_english_code</item>
+<!--        <item>@string/language_japanese_code</item>-->
+    </string-array>
+
+    <!--PCCovid-->
+    <string name="pccovid_no" translatable="false">Not use</string>
+    <string name="pccovid_scanner" translatable="false">By reader</string>
+    <string name="pccovid_camera" translatable="false">By camera</string>
+
+    <string-array name="pccovid_names">
+        <item>@string/pccovid_no</item>
+        <item>@string/pccovid_scanner</item>
+        <item>@string/pccovid_camera</item>
+    </string-array>
+
+    <integer name="pccovid_no_value" translatable="false">0</integer>
+    <integer name="pccovid_scanner_value" translatable="false">1</integer>
+    <integer name="pccovid_camera_value" translatable="false">2</integer>
+
+    <integer-array name="pccovid_values">
+        <item>@integer/pccovid_no_value</item>
+        <item>@integer/pccovid_scanner_value</item>
+        <item>@integer/pccovid_camera_value</item>
+    </integer-array>
+
+    <!--    Screen display-->
+    <string name="screen_full" translatable="false">Full screen</string>
+    <string name="screen_focus" translatable="false">Focus screen</string>
+
+    <string-array name="screen_names">
+        <item>@string/screen_full</item>
+        <item>@string/screen_focus</item>
+    </string-array>
+
+    <integer name="screen_full_value" translatable="false">0</integer>
+    <integer name="screen_focus_value" translatable="false">1</integer>
+
+    <integer-array name="screen_values">
+        <item>@integer/screen_full_value</item>
+        <item>@integer/screen_focus_value</item>
+    </integer-array>
+
+    <!--Machine function-->
+    <string name="function_timekeeping_name" translatable="false">Timekeeping</string>
+    <string name="function_checkin_name" translatable="false">Check in</string>
+    <string name="function_checkout_name" translatable="false">Check out</string>
+    <string name="function_canteen_name" translatable="false">Canteen</string>
+
+    <string-array name="machine_function_names">
+        <item>@string/function_timekeeping_name</item>
+        <item>@string/function_checkin_name</item>
+        <item>@string/function_checkout_name</item>
+        <item>@string/function_canteen_name</item>
+    </string-array>
+
+    <integer name="function_timekeeping_value" translatable="false">3</integer>
+    <integer name="function_checkin_value" translatable="false">1</integer>
+    <integer name="function_checkout_value" translatable="false">2</integer>
+    <integer name="function_canteen_value" translatable="false">4</integer>
+
+    <integer-array name="machine_function_values">
+        <item>@integer/function_timekeeping_value</item>
+        <item>@integer/function_checkin_value</item>
+        <item>@integer/function_checkout_value</item>
+        <item>@integer/function_canteen_value</item>
+    </integer-array>
+
+    <!--liveness level-->
+    <string name="liveness_level_no_name" translatable="false">No check</string>
+    <string name="liveness_level_medium_name" translatable="false">Medium</string>
+    <string name="liveness_level_high_name" translatable="false">High</string>
+
+    <string-array name="liveness_level_names">
+        <item>@string/liveness_level_no_name</item>
+        <item>@string/liveness_level_medium_name</item>
+        <item>@string/liveness_level_high_name</item>
+    </string-array>
+
+    <integer name="liveness_level_no_value" translatable="false">0</integer>
+    <integer name="liveness_level_medium_value" translatable="false">1</integer>
+    <integer name="liveness_level_high_value" translatable="false">2</integer>
+
+    <integer-array name="liveness_level_values">
+        <item>@integer/liveness_level_no_value</item>
+        <item>@integer/liveness_level_medium_value</item>
+        <item>@integer/liveness_level_high_value</item>
+    </integer-array>
+
+    <!--door type-->
+    <string name="door_type_with_controller_name" translatable="false">With controller</string>
+    <string name="door_type_no_controller_name" translatable="false">No controller</string>
+
+    <string-array name="door_type_names">
+        <item>@string/door_type_with_controller_name</item>
+        <item>@string/door_type_no_controller_name</item>
+    </string-array>
+
+    <integer name="door_type_with_controller_value" translatable="false">0</integer>
+    <integer name="door_type_no_controller_value" translatable="false">1</integer>
+
+    <integer-array name="door_type_values">
+        <item>@integer/door_type_with_controller_value</item>
+        <item>@integer/door_type_no_controller_value</item>
+    </integer-array>
+</resources>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogInputKey"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:layout_marginLeft="@dimen/_10sdp"
+    android:layout_marginRight="@dimen/_10sdp"
+    android:background="@drawable/rounded_edge_blue"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp">
+
+    <TextView
+        android:id="@+id/logintitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/_10sdp"
+        android:text="@string/label_login_information"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/_13ssp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edtUsername"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_28sdp"
+        android:textSize="@dimen/_16ssp"
+        android:background="@drawable/rounded_edge"
+        android:hint="@string/label_pin"
+        android:gravity="center"
+        android:maxLength="4"
+        android:ems="10"
+        android:textColor="@color/colorPrimaryDark"
+        android:inputType="numberPassword" />
+
+    <EditText
+        android:id="@+id/edtPassword"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30sdp"
+        android:background="@drawable/rounded_edge"
+        android:hint="@string/label_password"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:visibility="gone"/>
+
+    <EditText
+        android:id="@+id/edtNewPassword1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:background="@drawable/rounded_edge"
+        android:hint="@string/label_new_password"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:password="true"
+        android:visibility="gone"/>
+
+    <EditText
+        android:id="@+id/edtNewPassword2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:background="@drawable/rounded_edge"
+        android:hint="@string/label_repeat_password"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:password="true"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/_10sdp">
+
+        <TextView
+            android:id="@+id/btnChangePass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_change_password"
+            android:textColor="@color/colorWhite"
+            android:visibility="invisible"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/btnResetPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_forgot_password"
+            android:textColor="@color/colorWhite"
+            android:visibility="invisible"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@drawable/rounded_edge"
+        android:text="@string/label_login"
+        android:textColor="@color/colorButton"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btnClose"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@drawable/rounded_edge"
+        android:text="@string/label_close"
+        android:textColor="@color/colorButton"
+        android:textSize="16sp"/>
+
+</LinearLayout>
+
+

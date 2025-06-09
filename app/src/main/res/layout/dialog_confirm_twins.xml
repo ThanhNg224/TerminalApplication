@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/txtTitleConfirmTwins"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dialog Title"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white" />
+
+    <!-- Nội dung -->
+    <TextView
+        android:id="@+id/txtBodyConfirmTwins"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Dialog Body"
+        android:textSize="22sp"
+        android:padding="16dp" />
+
+    <!-- Phần cuối -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Nút Cancel -->
+        <Button
+            android:id="@+id/btnCancelConfirmTwin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:padding="16dp"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimary" />
+
+        <!-- Nút OK -->
+        <Button
+            android:id="@+id/btnOkConfirmTwin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="OK"
+            android:padding="16dp"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimary" />
+
+    </LinearLayout>
+
+</LinearLayout>

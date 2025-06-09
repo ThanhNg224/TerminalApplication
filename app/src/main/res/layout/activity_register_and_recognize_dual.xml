@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextureView
+                android:id="@+id/texture_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextureView
+                android:id="@+id/texture_preview_ir"
+                android:layout_width="1dp"
+                android:layout_height="1dp" />
+
+            <com.atin.arcface.widget.FaceRectView
+                android:id="@+id/face_rect_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <com.atin.arcface.widget.FocusView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <!--        <FrameLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_marginTop="@dimen/_100sdp"-->
+        <!--            android:layout_marginBottom="@dimen/_10sdp"-->
+        <!--            android:background="@drawable/avatar_thin_line">-->
+        <!--        </FrameLayout>-->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.atin.arcface.widget.BlurBehind
+                android:id="@+id/vBlurBehinde"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/txtTemperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="150dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@drawable/rounded_edge_green"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:text="36.5"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/intenetStatus"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/internet_off" />
+
+                <ImageView
+                    android:id="@+id/cloudDefaultStatus"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/cloud_off" />
+
+                <ImageView
+                    android:id="@+id/printerStatus"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_printer_disconnected"
+                    android:contentDescription="printer_status"/>
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/cloudSyncStatus"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    android:alpha="1"
+                    android:visibility="invisible"
+                    app:lottie_rawRes="@raw/cloud_load_animation"/>
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"/>
+
+                <LinearLayout
+                    android:id="@+id/clock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_weight="1.5">
+
+                    <TextView
+                        android:id="@+id/txtDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorWhite"
+                        android:text="01/01/2020"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtHour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorWhite"
+                        android:text="00:00:00"
+                        android:textSize="40sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_weight="2"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:contentDescription="Ảnh logo"
+                    android:onClick="tapLogo"
+                    app:srcCompat="@drawable/logo" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:textColor="@color/colorWhite"
+                android:text="1.0.0" />
+
+            <TextView
+                android:id="@+id/notification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="10dp"
+                android:gravity="center"
+                android:textColor="#00BCD4"
+                android:text="" />
+
+            <ImageView
+                android:id="@+id/imgTemperature"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:onClick="captureScreen"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                app:reverseLayout="true"
+                app:stackFromEnd="true">
+            </androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
+    </FrameLayout>
+</layout>

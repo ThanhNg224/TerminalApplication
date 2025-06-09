@@ -1,0 +1,1251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="main"
+            type="com.atin.arcface.activity.SystemSettingActivity"
+            />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bg_pic">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="10dp"
+                app:srcCompat="@drawable/logo" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/lbDeviceInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imgLogo"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/label_device_info"
+                    android:textColor="@color/colorButton"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:background="@drawable/border_block">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/lbIPAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_ip_address"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/edtIPAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/lbIMEI"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_imei"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/edtIMEI"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/lbMAC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_mac_address"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/edtMAC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/lbVersion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_version"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/edtVersion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorWhite"
+                            android:text="@string/app_version"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/lbDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imgLogo"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/label_display"
+                    android:textColor="@color/colorButton"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:background="@drawable/border_block">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbCompanyName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/label_company_name"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtCompanyName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="textPersonName"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                        <TextView
+                            android:id="@+id/lbLanguage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/label_language"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+
+                        <Spinner
+                            android:id="@+id/spnLanguage"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:background="@drawable/border_input"
+                            android:gravity="center"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/lbSetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imgLogo"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/label_config_application"
+                    android:textColor="@color/colorButton"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:background="@drawable/border_block"
+                    android:paddingBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbFunction"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_function"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Spinner
+                            android:id="@+id/spnDeviceFunction"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:background="@drawable/border_input"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:id="@+id/lbLiveness"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_liveness_detect"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchLivenessDetect"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbLivenessLevel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_liveness_level"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Spinner
+                            android:id="@+id/spnLivenessLevel"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:background="@drawable/border_input"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbUseLed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_use_led"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchTurnLed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbUseSound"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_use_sound"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchTurnSound"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbAutoStart"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_automatic_start"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchAutoStart"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbAutoSleep"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_automatic_sleep"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchAutoSleep"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbHideNavigator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_hide_navigator_bar"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchHideNavigator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbHideStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_hide_status_bar"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchHideStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:id="@+id/lbNoDelay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_no_delay"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchNoDelay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbCheckAccessPermission"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_check_access_business"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchUseBusinessCheck"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbCheckFaceMask"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_check_mask"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchCheckMask"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbShowTemperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_show_temperature"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchShowTemperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbCheckBodyTemperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_check_temperature"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchCheckTemperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:id="@+id/lbSaveGuestLog"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_save_person_unreg"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchSavePersonUnreg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:id="@+id/lbShowPersonCode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_show_vaccine"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchShowPersonCode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbScanQRCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_pccovid"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Spinner
+                            android:id="@+id/spnPCCovid"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:background="@drawable/border_input"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:id="@+id/lbCalibrateSensor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_calibration_temperature_camera"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Button
+                            android:id="@+id/btnCalibrationTemperatureCamera"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/calibration_temperature_camera"
+                            android:onClick="calibrationCamera" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbDoorType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_door_type"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Spinner
+                            android:id="@+id/spnDoorType"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:background="@drawable/border_input"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbDelayDoorTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_wait_door_time"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtDelayDoorTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="phone"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/lbScheduleReboot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/label_restart_header"
+                    android:textColor="@color/colorButton"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:background="@drawable/border_block">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbUseRebootSchedule"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_use_auto_reboot"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/switchAutoReboot"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/colorText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbRebootTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_time_reboot"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TimePicker
+                            android:id="@+id/timePicker"
+                            android:background="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:timePickerMode="spinner"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/lbFaceParameter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/label_face_recognize_parameter"
+                    android:textColor="@color/colorButton"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:background="@drawable/border_block">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbFaceThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_face_threshold"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="numberDecimal"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:id="@+id/lbNomaskQualityThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_nomask_quality_threshold"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtNomaskQualityThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="numberDecimal"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:id="@+id/lbMaskQualityThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_mask_quality_threshold"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtMaskQualityThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="numberDecimal"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:id="@+id/lbRegisterQualityThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_register_quality_threshold"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtRegisterQualityThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="numberDecimal"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbTemperatureThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_temperature_threshold"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtTemperatureThreshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="numberDecimal"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbDelayTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_time_keep_open_door"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtDelayRecognize"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="phone"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbDistanceDetect"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_time_distance_detect"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtDistanceDetect"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:background="@drawable/border_input"
+                            android:ems="10"
+                            android:inputType="phone"
+                            android:text="80"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/lbServerInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_system_info"
+                    android:textColor="@color/colorButton"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:background="@drawable/border_block">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbServerName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_bussiness_server_host"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtServerHost"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="text"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/lbUsername"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/label_authentication_username"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="16sp" />
+                            <Button
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_marginRight="5dp"
+                                android:background="@drawable/refresh"
+                                android:onClick="setDefaultUser" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/edtAuthUsername"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="text"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:enabled="false"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/lbPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_authentication_password"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/edtAuthPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="textPassword"
+                            android:background="@drawable/border_input"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/lbUpgrade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_update_system"
+                    android:textColor="@color/colorButton"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:background="@drawable/border_block">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/lbCheckNewVersion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_check_update_version"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+                        <Button
+                            android:id="@+id/btnCheckUpdate"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/check_update_version"
+                            android:onClick="checkUpdateSystem" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bg"
+                    android:onClick="Save"
+                    android:text="@string/button_save"
+                    android:textColor="@color/colorWhite" />
+                <Button
+                    android:id="@+id/btnClose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bg"
+                    android:onClick="Close"
+                    android:text="@string/button_close"
+                    android:textColor="@color/colorWhite" />
+                <Button
+                    android:id="@+id/btnOptions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bg"
+                    android:onClick="showOption"
+                    android:text="@string/button_options"
+                    android:textColor="@color/colorWhite" />
+                <Button
+                    android:id="@+id/btnGallery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bg"
+                    android:onClick="onDatabase"
+                    android:text="@string/button_database"
+                    android:textColor="@color/colorWhite" />
+
+                <Button
+                    android:id="@+id/btnEvent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bg"
+                    android:onClick="onEvent"
+                    android:text="@string/button_event"
+                    android:textColor="@color/colorWhite" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>
+
+

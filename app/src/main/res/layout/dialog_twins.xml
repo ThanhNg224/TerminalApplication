@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogInputKey"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/rounded_edge"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingTop="20dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:id="@+id/logintitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="20dp"
+        android:text="@string/label_list_twin"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ebebeb"/>
+
+    <ListView
+        android:id="@+id/lvCallSupport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ebebeb"/>
+
+    <Button
+        android:id="@+id/btnCloseTwinDialog"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:text="@string/label_cancel"
+        android:background="@color/colorWhite"
+        android:textColor="@color/colorButton"
+        android:textSize="18sp"
+        android:paddingTop="20dp"
+        android:textStyle="bold"/>
+
+</LinearLayout>
+
+

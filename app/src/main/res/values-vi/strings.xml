@@ -1,0 +1,255 @@
+<resources>
+    <string name="app_name">AT SmartFace Cloud</string>
+    <string name="app_version">1.0.0</string>
+
+    <string name="label_user_name">Họ và tên:</string>
+    <string name="label_department_name">Phòng ban: </string>
+    <string name="label_position_name">Chức danh: </string>
+    <string name="label_person_code">Mã nhân sự: </string>
+    <string name="label_vaccine">Tiêm chủng: </string>
+    <string name="label_job_name">Công việc: </string>
+    <string name="label_body_temperature">Nhiệt độ</string>
+    <string name="label_device_info">Thông tin thiết bị</string>
+    <string name="label_system_info">Thông tin máy chủ</string>
+    <string name="label_check_update_version">Kiểm tra bản cập nhật</string>
+    <string name="label_update_system">Cập nhật hệ thống</string>
+    <string name="label_display">Thông tin hiển thị</string>
+    <string name="label_company_name">Tên công ty</string>
+    <string name="label_ip_address">Địa chỉ IP</string>
+    <string name="label_device_code">Mã Camera</string>
+    <string name="label_mac_address">Địa chỉ MAC</string>
+    <string name="label_version">Version</string>
+    <string name="label_imei">IMEI</string>
+    <string name="label_face_dection_angle">Góc phát hiện khuôn mặt</string>
+    <string name="label_config_application">Cài đặt phần mềm</string>
+    <string name="label_config_temperature_camera">Cài đặt camera nhiệt</string>
+    <string name="label_config_process_image">Cài đặt thông số xử lý ảnh</string>
+    <string name="label_liveness_detect">Phát hiện giả mạo</string>
+    <string name="label_recognize_face_mask">Nhận diện qua khẩu trang</string>
+    <string name="label_use_led">Sử dụng đèn Led</string>
+    <string name="label_hide_navigator_bar">Ẩn thanh điều hướng</string>
+    <string name="label_hide_status_bar">Ẩn thanh công cụ</string>
+    <string name="label_use_sound">Sử dụng loa</string>
+    <string name="label_use_temperature_camera">Sử dụng camera nhiệt</string>
+    <string name="label_distance_calibration">Khoảng cách đến thiết bị (cm)</string>
+    <string name="label_warning_hight_temperature">Cảnh báo thân nhiệt cao</string>
+    <string name="label_not_allow_hight_temperature">Không cho phép Check In/Check Out/Mở cửa khi thân nhiệt cao</string>
+    <string name="label_calibration_temperature_camera">Hiệu chỉnh camera nhiệt</string>
+    <string name="label_admin_permission_request">Cấp quyền quản trị</string>
+    <string name="label_time_between_recognize">Thời gian giữa 2 lần nhận diện (giây)</string>
+    <string name="label_time_keep_open_door">Thời gian giữa 2 lần nhận diện (mili giây)</string>
+    <string name="label_time_open_door_parent">Thời gian chờ cửa phụ huynh (giây)</string>
+    <string name="label_time_distance_detect">Khoảng cách nhận diện (20 - 100 cm)</string>
+    <string name="label_max_threshold_temperature">Nhiệt độ ngưỡng cảnh báo</string>
+    <string name="label_automatic_start">Tự động bật chương trình</string>
+    <string name="label_automatic_sleep">Tự động giảm độ sáng màn hình</string>
+    <string name="label_no_delay">Nhận diện ngay khi có khuôn mặt mới</string>
+    <string name="label_use_card">Sử dụng thẻ từ</string>
+    <string name="label_offline">Xác thực cloud</string>
+    <string name="label_save_person_unreg">Lưu người chưa đăng ký</string>
+    <string name="label_show_person_code">Hiện mã nhân sự/Ẩn phòng ban và chức vụ</string>
+    <string name="label_show_vaccine">Hiển thị thông tin tiêm chủng</string>
+    <string name="label_show_personCode">Mã nhân viên/Chức danh</string>
+    <string name="label_check_access_business">Kiểm tra phân quyền truy nhập</string>
+    <string name="label_check_mask">Kiểm tra khẩu trang</string>
+    <string name="label_show_temperature">Hiển thị nhiệt độ cơ thể</string>
+    <string name="label_check_temperature">Kiểm tra nhiệt độ</string>
+    <string name="label_function">Chức năng</string>
+    <string name="label_liveness_level">Mức độ kiểm tra người thật</string>
+    <string name="label_pccovid">Kiểm tra pccovid</string>
+    <string name="label_language">Ngôn ngữ</string>
+    <string name="label_face_recognize_parameter">Tham số xử lý ảnh nhận diện</string>
+    <string name="label_face_threshold">Ngưỡng điểm xác nhận (0.75 - 1)</string>
+    <string name="label_nomask_quality_threshold">Chất lượng hình ảnh khi không có khẩu trang (0.49 - 1)</string>
+    <string name="label_mask_quality_threshold">Chất lượng hình ảnh khi có khẩu trang (0.29 - 1)</string>
+    <string name="label_register_quality_threshold">Chất lượng ảnh đăng ký (0.63 - 1)</string>
+    <string name="label_temperature_threshold">Ngưỡng nhiệt độ cảnh báo (°C)</string>
+    <string name="label_min_face_size">Kích thước ảnh tối thiểu</string>
+    <string name="label_living_threshold">Số lần check một người (1-5)</string>
+    <string name="label_server_parameter">Cấu hình máy chủ quản lý</string>
+    <string name="label_bussiness_server_host">Domain/IP</string>
+    <string name="label_authentication_username">Tài khoản</string>
+    <string name="label_authentication_password">Mật khẩu</string>
+    <string name="label_update">Cập nhật</string>
+    <string name="label_download_and_update">Tài xuống và cập nhật</string>
+    <string name="label_restart_header">Đặt lịch khởi động hàng ngày</string>
+    <string name="label_use_auto_reboot">Sử dụng khởi động hàng ngày</string>
+    <string name="label_time_reboot">Thời gian</string>
+    <string name="label_active_code">Mã kích hoạt</string>
+    <string name="label_app_id">APP ID</string>
+    <string name="label_active_file_name">active_result.dat</string>
+    <string name="preference_app_id">app_id</string>
+    <string name="preference_sdk_key">sdk_key</string>
+    <string name="preference_active_key">active_key</string>
+    <string name="preference_app_version">app_version</string>
+    <string name="label_login_information">Thông tin đăng nhập</string>
+    <string name="label_pin">PIN</string>
+    <string name="label_login_username">Tên đăng nhập<nhập></nhập></string>
+    <string name="label_password">Mật khẩu</string>
+    <string name="label_old_password">Mật khẩu cũ</string>
+    <string name="label_new_password">Mật khẩu mới</string>
+    <string name="label_repeat_password">Xác nhận mật khẩu</string>
+    <string name="label_change_password">Đổi mật khẩu</string>
+    <string name="label_forgot_password">Quyên mật khẩu</string>
+    <string name="label_reset_code">Mã khôi phục</string>
+    <string name="label_login">Đăng nhập</string>
+    <string name="label_cancel">Hủy bỏ</string>
+    <string name="label_close">Đóng</string>
+    <string name="label_apply">Áp dụng</string>
+    <string name="label_confirm_selected">Xác nhận</string>
+    <string name="label_clear_event">Clear event log</string>
+    <string name="label_clear_all">Clear all data</string>
+    <string name="label_hight_body_temperature">CẢNH BÁO THÂN NHIỆT CƠ THỂ CAO</string>
+    <string name="label_not_wear_mask">KHÔNG ĐEO KHẨU TRANG</string>
+    <string name="label_not_access_permission">KHÔNG CÓ QUYỀN TRUY CẬP</string>
+    <string name="label_access_time_expired">QUYỀN TRUY NHẬP HẾT HẠN</string>
+    <string name="label_person_not_found">KHÔNG TÌM THẤY THÔNG TIN</string>
+    <string name="label_out_off_time">NGOÀI GIỜ TRUY CẬP</string>
+    <string name="label_device_not_define">THIẾT BỊ CHƯA ĐƯỢC KHAI BÁO</string>
+    <string name="label_missing_access_permission">THIẾU DỮ LIỆU PHÂN QUYỀN TRUY CẬP</string>
+    <string name="label_list_twin">CHỌN BẠN TRONG DANH SÁCH BÊN DƯỚI</string>
+    <string name="label_door_type">Loại cửa</string>
+    <string name="label_wait_door_time">Thời gian chờ cửa (mili giây)</string>
+
+    <string name="button_shutdown">Shutdown</string>
+    <string name="button_home_screen">Home</string>
+    <string name="button_reboot">Reboot</string>
+    <string name="button_clear_event_log">Xóa dữ liệu lịch sử</string>
+    <string name="button_clear_all">Xóa dữ liệu thiết bị</string>
+    <string name="button_screen_off">Turn Off Screen</string>
+    <string name="button_options">Tùy chọn</string>
+    <string name="button_save">Lưu</string>
+    <string name="button_close">Đóng</string>
+    <string name="button_database">Danh sách</string>
+    <string name="button_active_offline">Kích hoạt ngoại tuyến</string>
+    <string name="button_active_online">Kích hoạt trực tuyến</string>
+    <string name="button_calibration">Hiệu chỉnh</string>
+    <string name="button_yes">Đồng ý</string>
+    <string name="button_no">Hủy bỏ</string>
+    <string name="button_event">Báo cáo</string>
+
+    <!--Message log -->
+    <string name="message_latest_version">Version is latest</string>
+    <string name="message_notification_update_firmware">Show notification update firmware</string>
+    <string name="message_md5_correct">MD5 is correct</string>
+    <string name="message_md5_not_correct_try_download">MD5 is not correct try to download</string>
+    <string name="message_donwload_firmware_success">Download firmware finish</string>
+    <string name="message_start_download_firmware">Start download firmware</string>
+    <string name="message_nfc_notsupport">The device does not support NFC</string>
+    <string name="message_nfc_working">Please Swipe Your Card</string>
+    <string name="message_nfc_notwork">Please Go To Settings And Open The NFC Switch</string>
+    <string name="message_infor_login_incorrect">Thông tin đăng nhập không chính xác</string>
+    <string name="message_config_error">Thiết bị định danh không thành công</string>
+    <string name="message_action_failed">Action failed</string>
+    <string name="message_action_failed_summary">Root is needed. Please enable root.</string>
+    <string name="message_tooltip_calibration_camera">- Giữ khuôn mặt chính giữa thiết bị, cách thiết bị 50cm sau đó nhấn nút hiệu chỉnh.\n - Không di chuyển khuôn mặt cho đến khi quá trình hiệu chỉnh hoàn tất.\n - Trong quá trình hiệu chỉnh nên sử dụng người có nhiệt độ bình thường để thực hiện.</string>
+    <string name="msg_server_error">Lỗi kết nối máy chủ, vui lòng kiểm tra cấu hình</string>
+    <string name="msg_data_server_error">Lỗi máy chủ ErrorCode 500</string>
+    <string name="msg_null_auth_server">Tài khoản/mật khẩu xác thực không đúng, vui lòng kiểm tra cấu hình</string>
+    <string name="msg_timeout_error">Kết nối máy chủ timeout</string>
+    <string name="msg_connect_error">Lỗi kết nối máy chủ</string>
+    <string name="msg_authenticate_error">Lỗi xác thực</string>
+    <string name="message_firmware_status">Phiên bản cập nhật mới %1$s</string>
+    <string name="message_request_synchronize_failure">Tạo yêu cầu thất bại</string>
+    <string name="message_update_firmware">Cài đặt phiên bản cập nhật %1$s</string>
+    <string name="message_specific_engine_init_failed">%s khởi tạo thất bại, lỗi:%d</string>
+    <string name="message_camera_error_notice">Không cho phép mở nhiều camera cùng lúc trên thiết bị</string>
+    <string name="message_permission_denied">Chưa được gán quyền!</string>
+    <string name="message_processing">Xử lý...</string>
+    <string name="message_device_not_support">Thiết bị không hỗ trợ</string>
+    <string name="message_clear_event">Xác nhận xóa toàn bộ giao dịch trên thiết bị?</string>
+    <string name="message_clear_all">Xác nhận xóa toàn bộ dữ liệu trên thiết bị?</string>
+    <string name="message_confirm_selected">Bạn hoàn toàn chịu trách nhiệm với lựa chọn của mình nếu có sự sai phạm bị phát hiện?</string>
+    <string name="message_score_matching_invalid">Ngưỡng điểm xác nhận phải trong khoảng 0.75 - 1</string>
+    <string name="message_distance_invalid">Khoảng cách nhận diện phải trong khoảng 20 - 100 cm</string>
+    <string name="message_delay_time_invalid">Thời gian giữa 2 lần nhận diện phải trong khoảng 1000 - 10.000 (ms)</string>
+    <string name="message_update_success">Cập nhật thành công</string>
+    <string name="message_administrator_on">Cấp quyền quản trị hệ thống thành công</string>
+    <string name="message_administrator_off">Cấp quyền quản trị hệ thống không thành công</string>
+    <string name="message_tooltip_login">Còn %1$s lần nữa để vào chức năng cài đặt</string>
+    <string name="messge_error_config_device">Lỗi khai báo cấu hình thiết bị</string>
+    <string name="message_error_confirm_password">Mật khẩu xác nhận không chính xác</string>
+    <string name="message_error_null_username">Tên đăng nhập không được để trống</string>
+    <string name="message_error_null_password">Mật khẩu không được để trống</string>
+    <string name="message_error_current_password_incorrect">Mật khẩu hiện tại không đúng</string>
+    <string name="message_error_recovery_code_incorrect">Mã khôi phục mật khẩu không đúng</string>
+    <string name="message_error_new_password_required">Mật khẩu mới không được để trống</string>
+    <string name="message_error_retype_password_required">Mật khẩu xác nhận không được để trống</string>
+    <string name="message_error_retype_password_invalid">Mật khẩu phải có độ dài từ 6 đến 20 ký tự</string>
+    <string name="message_account_suppend">Tài khoản tạm ngưng</string>
+
+    <!-- preference key-->
+    <string name="preference_switch_camera">switch_camera</string>
+    <string name="preference_dual_camera_offset_horizontal">dual_camera_offset_horizontal</string>
+    <string name="preference_dual_camera_offset_vertical">dual_camera_offset_vertical</string>
+    <string name="preference_draw_rgb_rect_horizontal_mirror">draw_rgb_rect_horizontal_mirror</string>
+    <string name="preference_draw_rgb_rect_vertical_mirror">draw_rgb_rect_vertical_mirror</string>
+    <string name="preference_draw_ir_rect_horizontal_mirror">draw_ir_rect_horizontal_mirror</string>
+    <string name="preference_draw_ir_rect_vertical_mirror">draw_ir_rect_vertical_mirror</string>
+    <string name="preference_rgb_preview_horizontal_mirror">rgb_preview_horizontal_mirror</string>
+    <string name="preference_ir_preview_horizontal_mirror">ir_preview_horizontal_mirror</string>
+    <string name="preference_rgb_camera_rotation">rgb_camera_rotation</string>
+    <string name="preference_ir_camera_rotation">ir_camera_rotation</string>
+    <string name="preference_liveness_detect_type">liveness_detect_type</string>
+    <string name="preference_rgb_liveness_detect">rgb_liveness_detect</string>
+    <string name="preference_ir_liveness_detect">ir_liveness_detect</string>
+    <string name="preference_recognize_keep_max_face">keep_max_face</string>
+    <string name="preference_recognize_limit_recognize_area">limit_recognize_area</string>
+    <string name="preference_recognize_max_detect_num">max_detect_num</string>
+    <string name="preference_recognize_scale_value">scale_value</string>
+    <string name="preference_choose_detect_degree">choose_detect_degree</string>
+    <string name="preference_track_face_count">track_face_count</string>
+    <string name="preference_recognize_threshold">recognize_threshold</string>
+    <string name="preference_recognize_face_size_limit">recognize_face_size_limit</string>
+    <string name="preference_recognize_move_pixel_limit">recognize_move_pixel_limit</string>
+    <string name="preference_rgb_liveness_threshold">rgb_liveness_threshold</string>
+    <string name="preference_ir_liveness_threshold">ir_liveness_threshold</string>
+    <string name="preference_liveness_fq_threshold">liveness_fq_threshold</string>
+    <string name="preference_dual_camera_preview_size">dual_camera_preview_size</string>
+    <string name="preference_enable_image_quality_detect">enable_image_quality_detect</string>
+    <string name="preference_enable_face_size_limit">enable_face_size_limit</string>
+    <string name="preference_enable_face_move_limit">enable_face_move_limit</string>
+    <string name="preference_image_quality_no_mask_recognize_threshold">image_quality_no_mask_recognize_threshold</string>
+    <string name="preference_image_quality_no_mask_register_threshold">image_quality_no_mask_register_threshold</string>
+    <string name="preference_image_quality_mask_recognize_threshold">image_quality_mask_recognize_threshold</string>
+    <string name="preference_compare_ir_and_rgb_threshold_threshold">compare_ir_and_rgb_threshold_threshold</string>
+
+    <!--untranslatable-->
+    <string name="language_vietnamese" translatable="false">Tiếng Việt</string>
+    <string name="language_english" translatable="false">English</string>
+    <string name="language_japanese" translatable="false">日本の</string>
+
+    <string-array name="language_names">
+        <item>@string/language_vietnamese</item>
+        <item>@string/language_english</item>
+        <!--<item>@string/language_japanese</item>-->
+    </string-array>
+
+    <string name="language_vietnamese_code" translatable="false">vi</string>
+    <string name="language_english_code" translatable="false">en</string>
+    <string name="language_japanese_code" translatable="false">ja</string>
+
+    <string-array name="language_codes">
+        <item>@string/language_vietnamese_code</item>
+        <item>@string/language_english_code</item>
+        <!--<item>@string/language_japanese_code</item>-->
+    </string-array>
+
+    <!--PCCovid-->
+    <string name="pccovid_no" translatable="false">Không sử dụng</string>
+    <string name="pccovid_scanner" translatable="false">Sử dụng đầu đọc gắn ngoài</string>
+    <string name="pccovid_camera" translatable="false">Sử dụng camera</string>
+
+    <!--    Screen display-->
+    <string name="screen_full" translatable="false">Toàn màn hình</string>
+    <string name="screen_focus" translatable="false">Tập trung giữa màn hình</string>
+
+    <!--liveness level-->
+    <string name="liveness_level_no_name" translatable="false">Không</string>
+    <string name="liveness_level_medium_name" translatable="false">Trung bình</string>
+    <string name="liveness_level_high_name" translatable="false">Nâng cao</string>
+
+    <!--door type-->
+    <string name="door_type_with_controller_name" translatable="false">Tích hợp bộ điều khiển</string>
+    <string name="door_type_no_controller_name" translatable="false">Không có bộ điều khiển</string>
+</resources>

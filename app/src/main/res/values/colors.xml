@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#54c8e6</color>
+    <color name="color_bg_notification">#80000000</color>
+    <color name="colorText">#80ffffff</color>
+    <color name="colorError">#FFFF0000</color>
+    <color name="colorButton">#006aff</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorWhiteTransparent">#CCFFFFFF</color>
+    <color name="black">#000</color>
+    <color name="dark">#303030</color>
+    <color name="navigationBarColorBlack">#000001</color>
+    <color name="red">#E73737</color>
+    <color name="green">#FF37CA3D</color>
+    <color name="orange">#EB7300</color>
+    <color name="yellow">#EBD100</color>
+    <color name="blue">#0088EB</color>
+    <color name="pink">#FF4081</color>
+    <color name="vc_red">#c30025</color>
+    <color name="vc_yellow">#e3c121</color>
+    <color name="vc_green">#05950b</color>
+    <color name="vc_gray">#d8e1ef</color>
+</resources>

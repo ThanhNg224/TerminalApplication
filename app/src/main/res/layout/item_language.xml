@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+<!--    <data>-->
+<!--        <variable-->
+<!--            name="holder"-->
+<!--            type="com.atin.arcface.widget.LanguageAdapter.ViewHolder"-->
+<!--            />-->
+<!--    </data>-->
+    <FrameLayout
+        android:id="@+id/frame_item_language"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        >
+
+        <TextView
+            android:id="@+id/languageName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@null"
+            android:clickable="false"
+            android:text="TextView"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            tools:text="@string/language_english"
+            />
+
+<!--        <RadioButton-->
+<!--            android:id="@+id/radio_item_language"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="15dp"-->
+<!--            android:background="@null"-->
+<!--            android:clickable="false"-->
+<!--            android:layoutDirection="rtl"-->
+<!--            android:text="@{ holder.name }"-->
+<!--            android:textAlignment="textStart"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:textSize="14sp"-->
+<!--            tools:text="@string/language_english"-->
+<!--            />-->
+    </FrameLayout>
+</layout>

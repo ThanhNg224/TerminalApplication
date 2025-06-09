@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+
+<!--    <ImageView-->
+<!--        android:id="@+id/background_power_dialog"-->
+<!--        android:background="@color/colorWhite"-->
+<!--        android:alpha="0.5"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_width="match_parent"-->
+<!--        tools:ignore="PrivateResource" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/frame"
+                android:background="@drawable/ic_round_recovery"
+                android:onClick="homeScreen"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/button_home_screen"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/frame"
+                android:background="@drawable/ic_round_recovery"
+                android:onClick="reboot"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/button_reboot"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/frame"
+                android:background="@drawable/ic_round_clear"
+                android:onClick="clearLogEvent"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/button_clear_event_log"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/frame"
+                android:background="@drawable/ic_round_clear"
+                android:onClick="clearAllData"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/button_clear_all"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="Hủy"
+            android:textColor="@color/colorWhite"
+            android:onClick="cancel"
+            android:background="@drawable/border_input_transparent" />
+    </LinearLayout>
+
+</FrameLayout>

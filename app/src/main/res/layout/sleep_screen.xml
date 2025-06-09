@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rSleepScreen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/daiji">
+
+    <ImageView
+        android:id="@+id/imgLogoDialog"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="tapLogo"
+        android:padding="20dp"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/txtCompanyName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal"
+        android:text="ATInnovation Software"
+        android:textColor="@color/colorText" />
+
+    <TextView
+        android:id="@+id/txtCurrentDateTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:gravity="center_horizontal"
+        android:text="Thứ năm, ngày 2, tháng 1, năm 2020"
+        android:textColor="@color/colorText" />
+</RelativeLayout>

@@ -1,0 +1,102 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+android {
+    namespace 'com.atin.arcface'
+    compileSdkVersion 35
+    defaultConfig {
+        applicationId "com.atin.arcface"
+        minSdkVersion 24
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 35
+        versionCode 22
+        versionName "1.6.3"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "arm64-v8a","armeabi-v7a"
+        }
+    }
+    buildFeatures {
+        buildConfig = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "VERSION_NAME", "\"${defaultConfig.versionName}\""
+        }
+        debug {
+            debuggable true
+            buildConfigField "String", "VERSION_NAME", "\"${defaultConfig.versionName}\""
+        }
+    }
+    dataBinding {
+        enabled = true
+    }
+    // solving com.android.tools.r8.CompilationFailedException: Compilation failed to complete
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/Posutil.jar')
+    implementation(name: 'stomp', ext: 'aar')
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.room:room-runtime:2.7.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0"
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support.test:runner:1.0.2'
+    implementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //Gson
+    implementation 'com.google.code.gson:gson:2.11.0'
+
+    //Ratio size
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+    implementation 'com.intuit.ssp:ssp-android:1.1.0'
+
+    //Circle image
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //Animation
+    implementation 'com.airbnb.android:lottie:4.2.2'
+
+    //Http client
+    implementation 'com.android.volley:volley:1.2.1'
+
+    //Socket
+    api 'org.java-websocket:Java-WebSocket:1.5.2'
+    api 'com.squareup.okhttp3:okhttp:4.12.0'
+
+    //Apache common
+    implementation 'org.apache.commons:commons-io:1.3.2'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+}
