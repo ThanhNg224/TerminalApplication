@@ -47,6 +47,9 @@ public class AccessBussiness {
     private boolean prefCheckTemperature;
     private float prefTemperatureThreshold;
     private boolean supportTemperatureCamera;
+    private String pendingPersonId;
+    private EventDB pendingEvent;
+
     private static Gson mGson = new Gson();
     private static Logger logger = Log4jHelper.getLogger(AccessBussiness.class.getSimpleName());
 
@@ -60,7 +63,53 @@ public class AccessBussiness {
         database = Application.getInstance().getDatabase();
     }
 
-    public AccessResult checkAccessPermission(String personId, boolean isMask, float temperature, int machineFunction, int accessType){
+    public void checkPermission(CompareResult compareResult, String personId) {
+        MachineDB thisDevice = SingletonObject.getInstance(context).getMainActivity().getThisDevice();
+        String deviceCode = thisDevice != null ? thisDevice.getImei() : "";
+
+        int machineFunction = MachineFunctionUtils.getMachineFunction().getFunctionValue();
+
+        if (machineFunction == Constants.CANTEEN) {
+            //
+            if (!offlineCanteenCheck(personId, deviceCode, compareResult)) {
+                return; //
+            }
+
+            //
+            if (ErrorCode.COMMON_ACCESS_VALID.equals(compareResult.getSummaryCode())) {
+                pendingPersonId = personId;
+                pendingEvent = getEventDb(compareResult);
+                pendingEvent.setUploadStatus(Constants.UPLOAD_PENDING);
+
+                SingletonObject.getInstance(context)
+                        .getMainActivity()
+                        .showDialogConfirmCanteen(compareResult);
+            }
+        } else {
+
+            checkNormalPermission(personId, compareResult, 37f);
+        }
+    }
+
+    private void checkNormalPermission(String personId, CompareResult compareResult, float flTemperature) {
+        try {
+            int machineFunction = MachineFunctionUtils.getMachineFunction().getFunctionValue();
+            AccessResult accessResult = checkAccessPermission(personId, compareResult.isMask(), flTemperature, machineFunction, Constants.AccessType.FACE_RECOGNIZE);
+            compareResult.setSummaryCode(accessResult.getSumaryCode());
+            compareResult.setDetailCode(accessResult.getDetailCode());
+
+            logger.info("Check permission"
+                    + " - PersonId: " + compareResult.getPersonId()
+                    + " - Errorcode: " + compareResult.getSummaryCode() + "/" + compareResult.getDetailCode()
+            );
+
+            SingletonObject.getInstance(context).getMainActivity().processResult(compareResult, false);
+        } catch (Exception ex) {
+            logger.error("Error checkPersonPermission " + ex.getMessage());
+        }
+    }
+
+    public AccessResult checkAccessPermission(String personId, boolean isMask, float temperature, int machineFunction, int accessType) {
         String errorCode = checkAccess(personId, accessType);
         AccessResult result = processResult(machineFunction, errorCode);
 
@@ -75,26 +124,54 @@ public class AccessBussiness {
             }
         }
 
-        if(prefCheckMask &&!isMask ){
+        if (prefCheckMask && !isMask) {
             return new AccessResult(result.getDetailCode(), ErrorCode.COMMON_NO_MASK);
         }
 
         return result;
     }
 
-    public void checkCanteenPermission(String personId, String deviceCode, CompareResult compareResult) throws Exception {
-        FacePermissionInput facePermissionInput = new FacePermissionInput();
-        facePermissionInput.setPersonId(personId);
-        facePermissionInput.setDeviceCode(deviceCode);
+//    public void checkCanteenPermission(String personId, String deviceCode, CompareResult compareResult) throws Exception {
+//        FacePermissionInput facePermissionInput = new FacePermissionInput();
+//        facePermissionInput.setPersonId(personId);
+//        facePermissionInput.setDeviceCode(deviceCode);
+//
+//        if (LockSearchUtil.isAvailable()) {
+//            LockSearchUtil.doLock();
+//            String url = SingletonObject.getInstance(context).getDomain() + "/api/v1/facePermission";
+//            doSearchCanteenPermission(url, facePermissionInput, compareResult);
+//        }
+//    }
 
-        if(LockSearchUtil.isAvailable()){
-            LockSearchUtil.doLock();
-            String url = SingletonObject.getInstance(context).getDomain() + "/api/v1/facePermission";
-            doSearchCanteenPermission(url, facePermissionInput, compareResult);
+    private boolean offlineCanteenCheck(String personId, String deviceCode, CompareResult compareResult) {
+        checkCanteenPermission(personId, deviceCode, compareResult);
+
+        if (!ErrorCode.COMMON_ACCESS_VALID.equals(compareResult.getSummaryCode())) {
+            if (ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_DAY.equals(compareResult.getSummaryCode())) {
+                compareResult.setPersonType("Hết lượt");
+            } else if (ErrorCode.COMMON_ACCESS_OUT_OF_SERVICE_TIME.equals(compareResult.getSummaryCode())) {
+                compareResult.setPersonType("Ngoài giờ");
+            } else if (ErrorCode.COMMON_EXPIRED.equals(compareResult.getSummaryCode())) {
+                compareResult.setPersonType("Quyền truy cập hết hạn");
+            } else {
+                compareResult.setPersonType("Không có quyền truy cập");
+            }
+
+            setPersonMeta(compareResult, personId);
+            SingletonObject.getInstance(context).getMainActivity().processResult(compareResult, false);
+            return false;
+
         }
+
+        compareResult.setPersonType("Hợp lệ");
+        setPersonMeta(compareResult, personId);
+        return true;
+
     }
 
-    public AccessResult checkPersonNotFound(boolean isMask, float temperature, int machineType){
+
+
+    public AccessResult checkPersonNotFound(boolean isMask, float temperature, int machineType) {
         prefCheckMask = pref.getBoolean(Constants.PREF_CHECK_MASK, false);
         prefCheckTemperature = pref.getBoolean(Constants.PREF_CHECK_TEMPERATURE, false);
         prefTemperatureThreshold = Float.parseFloat(pref.getString(Constants.PREF_TEMPERATURE_THRESHOLD, "37.5f"));
@@ -106,9 +183,9 @@ public class AccessBussiness {
             }
         }
 
-        if(prefCheckMask){
-            if(!isMask){
-                return new AccessResult(ErrorCode.COMMON_FACE_NOT_FOUND, ErrorCode.COMMON_NO_MASK );
+        if (prefCheckMask) {
+            if (!isMask) {
+                return new AccessResult(ErrorCode.COMMON_FACE_NOT_FOUND, ErrorCode.COMMON_NO_MASK);
             }
         }
 
@@ -116,53 +193,53 @@ public class AccessBussiness {
         return result;
     }
 
-    private String checkAccess(String personId, int accessType){
-        try{
+    private String checkAccess(String personId, int accessType) {
+        try {
             PersonDB personDB = database.getPerson(personId);
-            switch (accessType){
+            switch (accessType) {
                 case Constants.AccessType.FACE_RECOGNIZE:
-                    if(personDB.getPersonType() == Constants.PersonType.STAFF){
+                    if (personDB.getPersonType() == Constants.PersonType.STAFF) {
                         return checkStaff(personId);
-                    }else{
+                    } else {
                         return checkVisitor(personId);
                     }
 
                 case Constants.AccessType.CARD_RECOGNIZE:
                     return checkCard(personId);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             LogResponseServer.getInstance(context).responseLog("Error checkAccess: " + personId + " - " + ex.getMessage());
         }
         return ErrorCode.COMMON_NOT_ACCESS;
     }
 
-    private String checkStaff(String personId){
+    private String checkStaff(String personId) {
         boolean blOutOffServiceTime = false;
         boolean blNotAccess = false;
 
         //On/Off kiểm tra quyền ra vào
         boolean checkAccessBusiness = pref.getBoolean(Constants.PREF_USE_BUSINESS_CHECK, true);
-        if(!checkAccessBusiness){
+        if (!checkAccessBusiness) {
             return ErrorCode.COMMON_ACCESS_VALID;
         }
 
         //Kiểm tra nhóm quyền truy nhập
         MachineDB machine = database.getMachineByImei(BaseUtil.getImeiNumber(context));
-        if(machine == null ){
+        if (machine == null) {
             machine = ConfigUtil.getMachine();
         }
         List<PersonGroupDB> lsPersonGroup = database.getListPersonGroup(personId);
         List<GroupAccessDB> lsGroupAccess = database.getListGroupAccess(machine.getMachineId());
 
-        if(lsGroupAccess.isEmpty()){
+        if (lsGroupAccess.isEmpty()) {
             return ErrorCode.COMMON_NOT_ACCESS;
         }
 
         //Kiểm tra thêm giờ ra vào cụ thể gán cho từng người
         boolean blAccessTimeExpired = true;
         List<PersonAccessDB> lsPersonAccess = database.getListPersonAccess(personId, machine.getMachineId());
-        if(lsPersonAccess.size() > 0){
-            for (PersonAccessDB personAccessDB : lsPersonAccess){
+        if (lsPersonAccess.size() > 0) {
+            for (PersonAccessDB personAccessDB : lsPersonAccess) {
                 String fromDate = personAccessDB.getFromdate();
                 String toDate = personAccessDB.getTodate();
 
@@ -170,27 +247,27 @@ public class AccessBussiness {
                 Date dtToDate = StringUtils.convertStringToDate(toDate, "yyyy-MM-dd HH:mm:ss");
                 Date dtCurrent = Calendar.getInstance().getTime();
 
-                if(dtFromDate != null && dtToDate == null){ //Từ ngày khác null & đến ngày null
-                    if(dtCurrent.compareTo(dtFromDate) > 0){
+                if (dtFromDate != null && dtToDate == null) { //Từ ngày khác null & đến ngày null
+                    if (dtCurrent.compareTo(dtFromDate) > 0) {
                         blAccessTimeExpired = false;
                     }
-                }else if (dtFromDate == null && dtToDate != null){ //Từ ngày null & đến ngày khác null
-                    if(dtCurrent.compareTo(dtToDate) < 0){
+                } else if (dtFromDate == null && dtToDate != null) { //Từ ngày null & đến ngày khác null
+                    if (dtCurrent.compareTo(dtToDate) < 0) {
                         blAccessTimeExpired = false;
                     }
-                }else if(dtFromDate != null && dtToDate != null){ //Từ ngày và đến ngày đều khác null
-                    if(dtCurrent.compareTo(dtFromDate) > 0 && dtCurrent.compareTo(dtToDate) < 0){
+                } else if (dtFromDate != null && dtToDate != null) { //Từ ngày và đến ngày đều khác null
+                    if (dtCurrent.compareTo(dtFromDate) > 0 && dtCurrent.compareTo(dtToDate) < 0) {
                         blAccessTimeExpired = false;
                     }
-                }else{ //Từ ngày và đến ngày đều null
+                } else { //Từ ngày và đến ngày đều null
                     blAccessTimeExpired = false;
                 }
             }
-        }else{
+        } else {
             blAccessTimeExpired = false;
         }
 
-        if (blAccessTimeExpired){
+        if (blAccessTimeExpired) {
             return ErrorCode.COMMON_EXPIRED;
         }
         //End
@@ -203,40 +280,40 @@ public class AccessBussiness {
                             .filter(item -> item.getGroupId() == groupId)
                             .collect(Collectors.toList());
 
-            if(lsSubGroupAccess == null || lsSubGroupAccess.size() == 0){
+            if (lsSubGroupAccess == null || lsSubGroupAccess.size() == 0) {
                 blNotAccess = true;
                 continue;
             }
 
-            for(GroupAccessDB groupAccessDB : lsSubGroupAccess){
+            for (GroupAccessDB groupAccessDB : lsSubGroupAccess) {
                 int timeSegId = groupAccessDB.getTimeSegId();
                 AccessTimeSegDB timeSeg = database.getAccessTimeSeg(timeSegId);
 
                 AccessTimeSegDBConvert time = ParseModel.parseToTimeSegModel(timeSeg);
                 boolean allowTime = checkExistTime(time);
-                if(allowTime){
+                if (allowTime) {
                     return ErrorCode.COMMON_ACCESS_VALID;
                 }
                 blOutOffServiceTime = true;
             }
         }
 
-        if(blOutOffServiceTime){
+        if (blOutOffServiceTime) {
             return ErrorCode.COMMON_ACCESS_OUT_OF_SERVICE_TIME;
         }
 
-        if(blNotAccess){
+        if (blNotAccess) {
             return ErrorCode.COMMON_NOT_ACCESS;
         }
 
         return ErrorCode.COMMON_NOT_ACCESS;
     }
 
-    private String checkVisitor(String personId){
+    private String checkVisitor(String personId) {
         MachineDB machine = database.getMachineByImei(BaseUtil.getImeiNumber(context));
         List<PersonAccessDB> lsPersonAccess = database.getListPersonAccess(personId, machine.getMachineId());
 
-        for (PersonAccessDB personAccessDB : lsPersonAccess){
+        for (PersonAccessDB personAccessDB : lsPersonAccess) {
             String fromDate = personAccessDB.getFromdate();
             String toDate = personAccessDB.getTodate();
 
@@ -244,7 +321,7 @@ public class AccessBussiness {
             Date dtToDate = StringUtils.convertStringToDate(toDate, "yyyy-MM-dd HH:mm:ss");
             Date dtCurrent = Calendar.getInstance().getTime();
 
-            if(dtFromDate != null && dtToDate != null && dtCurrent.compareTo(dtFromDate) > 0 && dtCurrent.compareTo(dtToDate) < 0){
+            if (dtFromDate != null && dtToDate != null && dtCurrent.compareTo(dtFromDate) > 0 && dtCurrent.compareTo(dtToDate) < 0) {
                 return ErrorCode.COMMON_ACCESS_VALID;
             }
             continue;
@@ -253,7 +330,7 @@ public class AccessBussiness {
         return ErrorCode.COMMON_NOT_ACCESS;
     }
 
-    private String checkCard(String personId){
+    private String checkCard(String personId) {
         boolean blOutOffServiceTime = false;
         boolean blNotAccess = false;
 
@@ -261,15 +338,15 @@ public class AccessBussiness {
         List<PersonGroupDB> lsPersonGroup = database.getListPersonGroup(personId);
         List<GroupAccessDB> lsGroupAccess = database.getListGroupAccess(machine.getMachineId());
 
-        if(lsPersonGroup.isEmpty() || lsGroupAccess.isEmpty()){
+        if (lsPersonGroup.isEmpty() || lsGroupAccess.isEmpty()) {
             return ErrorCode.COMMON_CARD_NOT_ACCESS;
         }
 
         //Kiểm tra thêm giờ ra vào cụ thể gán cho từng người
         boolean blAccessTimeExpired = true;
         List<PersonAccessDB> lsPersonAccess = database.getListPersonAccess(personId, machine.getMachineId());
-        if(lsPersonAccess.size() > 0){
-            for (PersonAccessDB personAccessDB : lsPersonAccess){
+        if (lsPersonAccess.size() > 0) {
+            for (PersonAccessDB personAccessDB : lsPersonAccess) {
                 String fromDate = personAccessDB.getFromdate();
                 String toDate = personAccessDB.getTodate();
 
@@ -277,15 +354,15 @@ public class AccessBussiness {
                 Date dtToDate = StringUtils.convertStringToDate(toDate, "yyyy-MM-dd HH:mm:ss");
                 Date dtCurrent = Calendar.getInstance().getTime();
 
-                if(dtFromDate != null && dtToDate != null && dtCurrent.compareTo(dtFromDate) > 0 && dtCurrent.compareTo(dtToDate) < 0){
+                if (dtFromDate != null && dtToDate != null && dtCurrent.compareTo(dtFromDate) > 0 && dtCurrent.compareTo(dtToDate) < 0) {
                     blAccessTimeExpired = false;
                 }
             }
-        }else{
+        } else {
             blAccessTimeExpired = false;
         }
 
-        if (blAccessTimeExpired){
+        if (blAccessTimeExpired) {
             return ErrorCode.COMMON_EXPIRED;
         }
         //End
@@ -298,39 +375,39 @@ public class AccessBussiness {
                             .filter(item -> item.getGroupId() == groupId)
                             .collect(Collectors.toList());
 
-            if(lsSubGroupAccess == null || lsSubGroupAccess.size() == 0){
+            if (lsSubGroupAccess == null || lsSubGroupAccess.size() == 0) {
                 blNotAccess = true;
                 continue;
             }
 
-            for(GroupAccessDB groupAccessDB : lsSubGroupAccess){
+            for (GroupAccessDB groupAccessDB : lsSubGroupAccess) {
                 int timeSegId = groupAccessDB.getTimeSegId();
                 AccessTimeSegDB timeSeg = database.getAccessTimeSeg(timeSegId);
 
                 AccessTimeSegDBConvert time = ParseModel.parseToTimeSegModel(timeSeg);
                 boolean allowTime = checkExistTime(time);
-                if(allowTime){
+                if (allowTime) {
                     return ErrorCode.COMMON_CARD_ACCESS_VALID;
                 }
                 blOutOffServiceTime = true;
             }
         }
 
-        if(blOutOffServiceTime){
+        if (blOutOffServiceTime) {
             return ErrorCode.COMMON_CARD_ACCESS_OUT_OFF_SERVICE_TIME;
         }
 
-        if(blNotAccess){
+        if (blNotAccess) {
             return ErrorCode.COMMON_CARD_NOT_ACCESS;
         }
 
         return ErrorCode.COMMON_CARD_NOT_ACCESS;
     }
 
-    private AccessResult processResult(int machineFunction, String errorCode){
+    private AccessResult processResult(int machineFunction, String errorCode) {
         AccessResult accessResult;
 
-        switch (machineFunction){
+        switch (machineFunction) {
             case Constants.CHECK_IN:
                 accessResult = checkinBussiness(errorCode);
                 break;
@@ -353,9 +430,9 @@ public class AccessBussiness {
         return accessResult;
     }
 
-    public AccessResult timeKeepingBusiness(String errorCode){
-        switch (errorCode){
-            case  ErrorCode.COMMON_FACE_NOT_FOUND:
+    public AccessResult timeKeepingBusiness(String errorCode) {
+        switch (errorCode) {
+            case ErrorCode.COMMON_FACE_NOT_FOUND:
                 return new AccessResult(ErrorCode.TIMEKEEPING_FACE_NOT_FOUND, ErrorCode.COMMON_FACE_NOT_FOUND);
 
             case ErrorCode.COMMON_NOT_ACCESS:
@@ -384,9 +461,9 @@ public class AccessBussiness {
         }
     }
 
-    public AccessResult checkinBussiness(String errorCode){
+    public AccessResult checkinBussiness(String errorCode) {
         switch (errorCode) {
-            case  ErrorCode.COMMON_FACE_NOT_FOUND:
+            case ErrorCode.COMMON_FACE_NOT_FOUND:
                 return new AccessResult(ErrorCode.CHECKIN_FACE_NOT_FOUND, ErrorCode.COMMON_FACE_NOT_FOUND);
 
             case ErrorCode.COMMON_NOT_ACCESS:
@@ -415,9 +492,9 @@ public class AccessBussiness {
         }
     }
 
-    public AccessResult checkoutBussiness(String errorCode){
-        switch (errorCode){
-            case  ErrorCode.COMMON_FACE_NOT_FOUND:
+    public AccessResult checkoutBussiness(String errorCode) {
+        switch (errorCode) {
+            case ErrorCode.COMMON_FACE_NOT_FOUND:
                 return new AccessResult(ErrorCode.CHECKOUT_FACE_NOT_FOUND, ErrorCode.COMMON_FACE_NOT_FOUND);
 
             case ErrorCode.COMMON_NOT_ACCESS:
@@ -446,15 +523,15 @@ public class AccessBussiness {
         }
     }
 
-    public boolean checkExistTime(AccessTimeSegDBConvert model){
+    public boolean checkExistTime(AccessTimeSegDBConvert model) {
         boolean blExists = false;
 
-        try{
+        try {
             int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
             if (dayOfWeek == 1)
                 dayOfWeek = 8; //Nếu là chủ nhật thì gán bằng 8 để so sánh với db cho dễ
 
-            switch (dayOfWeek){
+            switch (dayOfWeek) {
                 case 2:
                     blExists = compareTimeSeg(model.getMondayStart1(), model.getMondayEnd1(),
                             model.getMondayStart2(), model.getMondayEnd2(),
@@ -498,40 +575,40 @@ public class AccessBussiness {
                             model.getSundayStart4(), model.getSundayEnd4());
                     break;
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             LogResponseServer.getInstance(context).responseLog("Error checkExistTime: " + ex.getMessage());
         }
 
         return blExists;
     }
 
-    private static boolean compareTimeSeg(Date dtStart1, Date dtEnd1, Date dtStart2, Date dtEnd2, Date dtStart3, Date dtEnd3, Date dtStart4, Date dtEnd4) throws Exception{
+    private static boolean compareTimeSeg(Date dtStart1, Date dtEnd1, Date dtStart2, Date dtEnd2, Date dtStart3, Date dtEnd3, Date dtStart4, Date dtEnd4) throws Exception {
         Date dtCurrentTime = Calendar.getInstance().getTime();
-        if(dtCurrentTime.after(dtStart1) && dtCurrentTime.before(dtEnd1)){
+        if (dtCurrentTime.after(dtStart1) && dtCurrentTime.before(dtEnd1)) {
             return true;
         }
 
-        if(dtCurrentTime.after(dtStart2) && dtCurrentTime.before(dtEnd2)){
+        if (dtCurrentTime.after(dtStart2) && dtCurrentTime.before(dtEnd2)) {
             return true;
         }
 
-        if(dtCurrentTime.after(dtStart3) && dtCurrentTime.before(dtEnd3)){
+        if (dtCurrentTime.after(dtStart3) && dtCurrentTime.before(dtEnd3)) {
             return true;
         }
 
-        if(dtCurrentTime.after(dtStart4) && dtCurrentTime.before(dtEnd4)){
+        if (dtCurrentTime.after(dtStart4) && dtCurrentTime.before(dtEnd4)) {
             return true;
         }
 
         return false;
     }
 
-    public List<CompareResult> getTwins(String personId){
+    public List<CompareResult> getTwins(String personId) {
         List<CompareResult> lsTwinOfPerson = new ArrayList<>();
         List<TwinDB> lsTwins = database.getListTwinOfPerson(personId);
 
         //Phải add thêm chính đối tượng hiện tại vào danh sách sinh đôi
-        if(lsTwins.size() > 0){
+        if (lsTwins.size() > 0) {
             TwinDB twinDB = new TwinDB();
             twinDB.setPersonId(personId);
             twinDB.setSimilarPersonId(personId);
@@ -539,7 +616,7 @@ public class AccessBussiness {
         }
 
         for (TwinDB twin : lsTwins) {
-            try{
+            try {
                 PersonDB personDB = database.getPerson(twin.getSimilarPersonId());
                 FaceDB faceDB = database.getFaceByPerson(personDB.getPersonId());
 
@@ -553,7 +630,7 @@ public class AccessBussiness {
                 compareResult.setJobDuties(personDB.getJobDuties());
 
                 lsTwinOfPerson.add(compareResult);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 Log.e("Error getTwins", ex.getMessage());
             }
         }
@@ -566,21 +643,22 @@ public class AccessBussiness {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jObject,
                 response -> {
-                    try{
+                    try {
                         String jsonResponse = response.toString();
-                        Type responseType = new TypeToken<ResponseDto<CompareResult>>(){}.getType();
+                        Type responseType = new TypeToken<ResponseDto<CompareResult>>() {
+                        }.getType();
                         ResponseDto<CompareResult> responseDto = mGson.fromJson(jsonResponse, responseType);
 
-                        if(responseDto.getStatus() != 200){
-                            if(responseDto.getError().length() > 200){
+                        if (responseDto.getStatus() != 200) {
+                            if (responseDto.getError().length() > 200) {
                                 BaseUtil.broadcastShowMessage(context, "Lỗi kiểm tra quyền canteen");
-                            }else{
+                            } else {
                                 BaseUtil.broadcastShowMessage(context, "Lỗi kiểm tra quyền canteen " + responseDto.getError());
                             }
                             return;
                         }
 
-                        if(responseDto.getData() == null){
+                        if (responseDto.getData() == null) {
                             BaseUtil.broadcastShowMessage(context, "Nội dung api canteen không hợp lệ");
                             return;
                         }
@@ -590,36 +668,37 @@ public class AccessBussiness {
                         compareResult.setDetailCode(compareResultApi.getDetailCode());
                         compareResult.setNote(compareResultApi.getNote());
 
-                        if(compareResultApi.getSummaryCode().equals(ErrorCode.COMMON_ACCESS_VALID)){
-                            SingletonObject.getInstance(context).getMainActivity().processCanteenResult(compareResult);
-                        }else{
+                        if (compareResultApi.getSummaryCode().equals(ErrorCode.COMMON_ACCESS_VALID)) {
+                            SingletonObject.getInstance(context).getMainActivity().processResult(compareResult, false);
+                        } else {
                             SingletonObject.getInstance(context).getMainActivity().processResult(compareResult, false);
                         }
 
                         BaseUtil.broadcastShowMessage(context, "");
-                    }catch (Exception ex){
+                    } catch (Exception ex) {
                         Toast.makeText(context, "LỖI API " + ex.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 },
                 error -> {
                     String cause = StringUtils.getThrowCause(error);
-                    if(cause.contains("com.android.volley.TimeoutError")){
+                    if (cause.contains("com.android.volley.TimeoutError")) {
                         Toast.makeText(context, "HẾT THỜI GIAN XỬ LÝ TÌM KIẾM", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Toast.makeText(context, "LỖI API TÌM KIẾM", Toast.LENGTH_SHORT).show();
                     }
                     //mainActivity.showWatingUi(false);
-                }){
+                }) {
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 if (response != null) {
                     int statusCode = response.statusCode;
-                    if(statusCode != 200){
+                    if (statusCode != 200) {
                         Toast.makeText(context, "LỖI API TÌM KIẾM " + statusCode, Toast.LENGTH_SHORT).show();
                     }
                 }
                 return super.parseNetworkResponse(response);
             }
+
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<String, String>();
@@ -643,52 +722,54 @@ public class AccessBussiness {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jObject,
                 response -> {
-                    try{
+                    try {
                         String jsonResponse = response.toString();
-                        Type responseType = new TypeToken<ResponseDto<Boolean>>(){}.getType();
+                        Type responseType = new TypeToken<ResponseDto<Boolean>>() {
+                        }.getType();
                         ResponseDto<Boolean> responseDto = mGson.fromJson(jsonResponse, responseType);
 
                         SingletonObject.getInstance(context).getMainActivity().hideDialog();
 
-                        if(responseDto.getStatus() != 200){
-                            if(responseDto.getError().length() > 200){
+                        if (responseDto.getStatus() != 200) {
+                            if (responseDto.getError().length() > 200) {
                                 Toast.makeText(context, "Lỗi api xác nhận sử dụng bữa ăn canteen", Toast.LENGTH_SHORT).show();
-                            }else{
+                            } else {
                                 Toast.makeText(context, "Lỗi api xác nhận sử dụng bữa ăn canteen " + responseDto.getError(), Toast.LENGTH_SHORT).show();
                             }
                             return;
                         }
 
-                        if(responseDto.getData() == null){
+                        if (responseDto.getData() == null) {
                             Toast.makeText(context, "Nội dung api xác nhận bữa ăn không hợp lệ", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         TicketFormatter.printFormattedCanteenTicket(context, compareResult);
                         Toast.makeText(context, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                    }catch (Exception ex){
+                    } catch (Exception ex) {
                         Toast.makeText(context, "LỖI API XÁC NHẬN CANTEEN " + ex.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 },
                 error -> {
                     String cause = StringUtils.getThrowCause(error);
-                    if(cause.contains("com.android.volley.TimeoutError")){
+                    if (cause.contains("com.android.volley.TimeoutError")) {
                         Toast.makeText(context, "HẾT THỜI GIAN XỬ LÝ TÌM KIẾM", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Toast.makeText(context, "LỖI API TÌM KIẾM", Toast.LENGTH_SHORT).show();
                     }
                     //mainActivity.showWatingUi(false);
-                }){
+                }) {
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 if (response != null) {
                     int statusCode = response.statusCode;
-                    if(statusCode != 200){
+                    if (statusCode != 200) {
                         Toast.makeText(context, "LỖI API TÌM KIẾM " + statusCode, Toast.LENGTH_SHORT).show();
                     }
                 }
                 return super.parseNetworkResponse(response);
             }
+
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<String, String>();
@@ -705,6 +786,37 @@ public class AccessBussiness {
         VolleySingleton.getInstance(context).addToRequestQueue(request);
     }
 
+    public void confirmCanteenUsageLocal(CompareResult compareResult) {
+        try {
+            //Tạo bản ghi event giống như online
+            EventDB eventDB = getEventDb(compareResult);
+            String jsonObject = mGson.toJson(eventDB, EventDB.class);
+            JSONObject jObject = new JSONObject(jsonObject); //
+
+            // Ghi event vào local DB để sync sau
+            eventDB.setUploadStatus(Constants.UPLOAD_PENDING);  // đánh dấu chưa sync
+            database.insertEventLog(eventDB);
+
+            //In vé ăn
+            TicketFormatter.printFormattedCanteenTicket(context, compareResult);
+
+            //Update quota (ăn trong ngày/tháng)
+            String todayIso = StringUtils.currentDateSQLiteformat();
+            Calendar now = Calendar.getInstance();
+            int month = now.get(Calendar.MONTH) + 1;
+            int year = now.get(Calendar.YEAR);
+            database.increaseDailyAndMonthly(compareResult.getPersonId(), todayIso);
+
+            //Toast thành công giống như API success
+            Toast.makeText(context, "Đã xác nhận suất ăn offline thành công", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception ex) {
+            Toast.makeText(context, "Lỗi xử lý offline: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e("CANTEEN_LOCAL", "❌ confirmCanteenUsageLocal FAILED", ex);
+        }
+    }
+
+
     //Insert event Log
     private EventDB getEventDb(CompareResult compareResult) {
         EventDB model = new EventDB();
@@ -717,10 +829,10 @@ public class AccessBussiness {
             logger.info("Start get event canteen - EventId: " + eventId + " - PersonId: " + compareResult.getPersonId());
 
             byte[] bFace = new byte[0];
-            try{
+            try {
                 FaceInfoCapture faceInfoCapture = compareResult.getFaceInfoCapture();
                 bFace = FaceServer.getInstance().captureFacePhoto(faceInfoCapture.getFaceCapture(), faceInfoCapture.getFaceInfo(), compareResult.getPreviewSize());
-            }catch (Exception ex){
+            } catch (Exception ex) {
 
             }
 
@@ -745,4 +857,200 @@ public class AccessBussiness {
 
         return model;
     }
+
+    private void setPersonMeta(CompareResult cmp, String personId) {
+        cmp.setPersonId(personId);
+    }
+
+    public void checkCanteenPermission(String personId, String deviceCode, CompareResult compareResult) {
+        boolean blOutOffServiceTime = false;
+        boolean blNotAccessPermission = false;
+        List<Integer> lsAllGroup = new ArrayList<>();
+        List<Integer> lsGroupValid = new ArrayList<>();
+
+        //Check khai báo
+        PersonDB personEntity = database.getPerson(personId);
+        if (personEntity == null) {
+            compareResult.setNote("ID nhân viên không tồn tại");
+            compareResult.setSummaryCode(ErrorCode.COMMON_FACE_NOT_FOUND);
+            compareResult.setDetailCode(ErrorCode.COMMON_FACE_NOT_FOUND);
+            return;
+        }
+
+        if (personEntity.getStatus() == 0) {
+            compareResult.setNote("TÀI KHOẢN NGỪNG HOẠT ĐỘNG");
+            compareResult.setSummaryCode(ErrorCode.COMMON_ACCOUNT_SUPPEND);
+            compareResult.setDetailCode(ErrorCode.COMMON_ACCOUNT_SUPPEND);
+            return;
+        }
+
+// Kiểm tra thời gian làm việc
+        MachineDB thisDevice = SingletonObject.getInstance(context).getMainActivity().getThisDevice();
+        List<PersonAccessDB> lsPersonAccess = database.getListPersonAccess(
+                personEntity.getPersonId(), thisDevice.getCompId());
+
+        boolean endOfWorkTime = true;
+        Date dtNow = Calendar.getInstance().getTime();
+
+        if (lsPersonAccess != null && !lsPersonAccess.isEmpty()) {
+            for (PersonAccessDB pa : lsPersonAccess) {
+                Date dtWorkFrom = null;
+                Date dtWorkTo = null;
+
+                if (pa.getFromdate() != null && !pa.getFromdate().isEmpty()) {
+                    dtWorkFrom = StringUtils.convertStringToDate(pa.getFromdate(), "yyyy-MM-dd HH:mm:ss");
+                    if (dtWorkFrom != null && dtWorkFrom.after(dtNow)) {
+                        continue;
+                    }
+                }
+                if (pa.getTodate() != null && !pa.getTodate().isEmpty()) {
+                    dtWorkTo = StringUtils.convertStringToDate(pa.getTodate(), "yyyy-MM-dd HH:mm:ss");
+                    if (dtWorkTo != null && dtWorkTo.before(dtNow)) {
+                        continue;
+                    }
+                }
+                // Nếu hợp lệ thì break ngay, bỏ qua các vòng for tiếp theo
+                endOfWorkTime = false;
+                break;
+            }
+        }
+
+        if (endOfWorkTime) {
+            // Log cảnh báo khi bị hết hạn truy cập (nếu muốn giữ lại 1 log duy nhất)
+            Log.w("CANTEEN", "Access expired for personId=" + personEntity.getPersonId() + ", machineId=" + thisDevice.getCompId());
+            compareResult.setNote("QUYỀN TRUY CẬP HẾT HẠN");
+            compareResult.setSummaryCode(ErrorCode.COMMON_EXPIRED);
+            compareResult.setDetailCode(ErrorCode.COMMON_EXPIRED);
+            return;
+        }
+
+
+
+        List<PersonGroupDB> lsPersonGroup = database.getListPersonGroup(personId);
+        if (lsPersonGroup.isEmpty()) {
+            compareResult.setNote("Nhóm truy cập nhân viên không hợp lệ");
+            compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
+            compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
+            return;
+        }
+
+        for (PersonGroupDB personGroup : lsPersonGroup) {
+            lsAllGroup.add(personGroup.getGroupId());
+        }
+
+        MachineDB machine = database.getMachineByImei(deviceCode);
+        if (machine == null) {
+            compareResult.setNote("Thông tin thiết bị không tồn tại " + deviceCode);
+            compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
+            compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
+            return;
+        }
+
+        List<GroupAccessDB> lsGroupAccessCanteenValid = new ArrayList<>();
+        for (Integer groupId : lsAllGroup) {
+            List<GroupAccessDB> lsAllGroupAccess = database.getListGroupAccessByGroup(groupId);
+            if (lsAllGroupAccess.isEmpty() && lsGroupValid.isEmpty()) {
+                blNotAccessPermission = true;
+                continue;
+            }
+
+            for (GroupAccessDB groupAccess : lsAllGroupAccess) {
+                if (machine.getMachineId() != groupAccess.getMachineId()) {
+                    blNotAccessPermission = true;
+                    continue;
+                }
+
+                if (groupAccess.getAccessTurnType() == null || groupAccess.getAccessTurnType() == 0 ||
+                        groupAccess.getAccessTurnNumber() == null || groupAccess.getAccessTurnNumber() == 0) {
+                    blNotAccessPermission = true;
+                    continue;
+                }
+
+                int timeSegId = groupAccess.getTimeSegId();
+                AccessTimeSegDB accessTimeSegEntity = database.getAccessTimeSeg(timeSegId);
+                if (accessTimeSegEntity == null) {
+                    blOutOffServiceTime = true;
+                    continue;
+                }
+
+                AccessTimeSegDBConvert accessTimeSeg = ParseModel.parseToTimeSegModel(accessTimeSegEntity);
+                if (!checkExistTime(accessTimeSeg)) {
+                    blOutOffServiceTime = true;
+                    continue;
+                }
+
+                lsGroupValid.add(groupId);
+                lsGroupAccessCanteenValid.add(groupAccess);
+
+                blOutOffServiceTime = false;
+                blNotAccessPermission = false;
+            }
+        }
+
+        if (lsGroupValid.isEmpty()) {
+            if (blOutOffServiceTime) {
+                compareResult.setNote("Ngoài giờ phục vụ");
+                compareResult.setSummaryCode(ErrorCode.COMMON_ACCESS_OUT_OF_SERVICE_TIME);
+                compareResult.setDetailCode(ErrorCode.COMMON_ACCESS_OUT_OF_SERVICE_TIME);
+                return;
+            }
+
+            if (blNotAccessPermission) {
+                compareResult.setNote("Không có quyền thực hiện");
+                compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
+                compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
+                return;
+            }
+
+            compareResult.setNote("Không có quyền truy cập hợp lệ");
+            compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
+            compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
+            return;
+        }
+
+        MealByMonthDB mealByMonthEntity = database.getMealQuota(Calendar.getInstance().get(Calendar.MONTH) + 1,
+                Calendar.getInstance().get(Calendar.YEAR));
+
+        if (mealByMonthEntity == null) {
+            compareResult.setNote("Thông tin cấu hình số lượt ăn trong tháng không tồn tại");
+            compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
+            compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
+            return;
+        }
+
+        int monthUsed = database.countMonthly(personId, Calendar.getInstance().get(Calendar.MONTH) + 1, Calendar.getInstance().get(Calendar.YEAR));
+        if (monthUsed >= mealByMonthEntity.getEatCount()) {
+            compareResult.setNote("Đã sử dụng hết số lượt ăn trong tháng");
+            compareResult.setSummaryCode(ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_MONTH);
+            compareResult.setDetailCode(ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_MONTH);
+            return;
+        }
+
+        int dailyUsed = database.countDaily(personId, StringUtils.currentDateSQLiteformat());
+        for (GroupAccessDB groupAccessEntity : lsGroupAccessCanteenValid) {
+            if (groupAccessEntity.getAccessTurnType() == null || groupAccessEntity.getAccessTurnType() == 0) {
+                compareResult.setNote("Thông tin hợp lệ");
+                compareResult.setSummaryCode(ErrorCode.COMMON_ACCESS_VALID);
+                compareResult.setDetailCode(ErrorCode.COMMON_ACCESS_VALID);
+                return;
+            }
+
+            Integer totalAccessTimeNumber = groupAccessEntity.getAccessTurnNumber();
+            if (totalAccessTimeNumber == null || totalAccessTimeNumber == 0) continue;
+
+            if (dailyUsed < totalAccessTimeNumber) {
+                compareResult.setNote("Thông tin hợp lệ");
+                compareResult.setSummaryCode(ErrorCode.COMMON_ACCESS_VALID);
+                compareResult.setDetailCode(ErrorCode.COMMON_ACCESS_VALID);
+                compareResult.setRemainTurnNumber(totalAccessTimeNumber - dailyUsed);
+                return;
+            }
+        }
+
+        compareResult.setNote("Đã sử dụng hết số lượt ăn trong ngày");
+        compareResult.setSummaryCode(ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_DAY);
+        compareResult.setDetailCode(ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_DAY);
+    }
+
+
 }

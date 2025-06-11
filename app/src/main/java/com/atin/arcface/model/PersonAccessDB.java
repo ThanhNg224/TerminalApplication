@@ -67,4 +67,5 @@ public class PersonAccessDB {
     public void setIsDelete(int isDelete) {
         this.isDelete = isDelete;
     }
+
 }

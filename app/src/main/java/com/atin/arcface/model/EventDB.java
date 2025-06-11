@@ -213,4 +213,15 @@ public class EventDB {
     public void setNote(String note) {
         this.note = note;
     }
+
+    private int uploadStatus;
+
+    public int getUploadStatus() {
+        return uploadStatus;
+    }
+
+    public void setUploadStatus(int uploadStatus) {
+        this.uploadStatus = uploadStatus;
+    }
+
 }

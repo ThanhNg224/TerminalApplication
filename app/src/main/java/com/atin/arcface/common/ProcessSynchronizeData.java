@@ -1,6 +1,7 @@
 package com.atin.arcface.common;
 
 import android.content.*;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -36,6 +37,14 @@ import com.atin.arcface.util.Log4jHelper;
 import com.atin.arcface.util.MachineFunctionUtils;
 import com.atin.arcface.util.StringUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.List;
+
+
+
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
 import org.apache.commons.io.*;
 import org.apache.log4j.Logger;
@@ -43,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -69,6 +79,7 @@ public class ProcessSynchronizeData {
     private Database database;
     private String prefServerDomain;
     private String httpPrefix;
+    private final Gson gson = new Gson();
 
     public ProcessSynchronizeData(Context context) {
         this.mContext = context;
@@ -127,6 +138,9 @@ public class ProcessSynchronizeData {
     }
 
     public int onProcess(SyncRequest syncData) throws Exception {
+        Log.d("SYNC", "↪️ onProcess called: type="
+                + syncData.getDataType()
+                + " data=" + syncData.getData());
         int result = Constants.ProcessResult.SUCCESS;
 
         int actionType = syncData.getActionType();
@@ -172,12 +186,39 @@ public class ProcessSynchronizeData {
                 break;
 
             case Constants.SyncDataType.GROUP_ACCESS:
-                String[] arrayData  = toArrayData(syncData.getData());
+                 String[] arrayData  = toArrayData(syncData.getData());
                 for (String lineData: arrayData) {
                     GroupAccessDB groupAccess = parseGroupAccess(lineData); //OK
                     synchronizeGroupAccess(groupAccess, actionType);
                 }
                 break;
+
+            case Constants.SyncDataType.MEAL_BY_MONTH:
+                Log.d("SYNC", "💥 MEAL_BY_MONTH raw: \n" + syncData.getData());
+                //ClEAR MEAL_BY_MONTH table
+                database.clearTable("MEAL_BY_MONTH");
+                //
+                for (String lineData : toArrayData(syncData.getData())) {
+                    Log.d("SYNC", "📄 Parsed line: " + lineData);
+                    MealByMonthDB quota = parseMealByMonth(lineData);
+                    Log.d("SYNC", "✅ Parsed quota: " + quota);
+                    synchronizeMealByMonth(quota, actionType);
+                }
+                break;
+            case Constants.SyncDataType.CANTEEN_DAILY_HISTORY_SNAP:
+                for (String line: toArrayData(syncData.getData())) {
+                    CanteenDailyHistoryDB h = parseDailyHistory(line);
+                    database.insertOrUpdateDaily(h);
+                }
+                break;
+
+            case Constants.SyncDataType.CANTEEN_MONTHLY_HISTORY_SNAP:
+                for (String line: toArrayData(syncData.getData())) {
+                    CanteenMonthlyHistoryDB h = parseMonthlyHistory(line);
+                    database.insertOrUpdateMonthly(h);
+                }
+                break;
+
 
             case Constants.SyncDataType.ACCESS_TIME_SEG:
                 AccessTimeSegDB accessTimeSeg = parseAccessTimeSeg(syncData.getData()); //OK
@@ -242,10 +283,59 @@ public class ProcessSynchronizeData {
             case Constants.SyncDataType.RESEND_EVENT:
                 resendEvent(syncData.getData());
                 break;
+
         }
 
         return result;
     }
+
+    private MealByMonthDB parseMealByMonth(String line) {
+        // line format: id,month,year,eatCount
+        String[] parts = line.split(Constants.FIELD_SAPERATE, -1);
+        MealByMonthDB q = new MealByMonthDB();
+        q.setId(Integer.parseInt(parts[0]));
+        q.setMonth(Integer.parseInt(parts[1]));
+        q.setYear(Integer.parseInt(parts[2]));
+        q.setEatCount(Integer.parseInt(parts[3]));
+        if (parts.length < 5) {
+            // fallback: lấy compId của máy nếu server chưa support
+            q.setCompId(ConfigUtil.getMachine().getCompId());
+        }
+
+
+        return q;
+    }
+
+    private void synchronizeMealByMonth(MealByMonthDB quota, int actionType) {
+        Log.d("SYNC", "✔️ quota parsed = " + quota.toString());
+        database.insertOrUpdateMealQuota(quota);
+    }
+    /* id,personId,logDate,number,isDelete */
+    private CanteenDailyHistoryDB parseDailyHistory(String line) {
+        String[] a = line.split(Constants.FIELD_SAPERATE, -1);
+        return new CanteenDailyHistoryDB(
+                Integer.parseInt(a[0]),
+                a[1],
+                a[2],
+                Integer.parseInt(a[3]),
+                Integer.parseInt(a[4]) == 1);
+    }
+
+
+
+    /* id,personId,month,year,totalNumber,isDelete */
+    private CanteenMonthlyHistoryDB parseMonthlyHistory(String line) {
+        String[] a = line.split(Constants.FIELD_SAPERATE, -1);
+        return new CanteenMonthlyHistoryDB(
+                Integer.parseInt(a[0]),
+                a[1],
+                Integer.parseInt(a[2]),
+                Integer.parseInt(a[3]),
+                Integer.parseInt(a[4]),
+                Integer.parseInt(a[5]) == 1);
+    }
+
+
 
     public void uploadDatabase(FaceTerminalRemote syncData) {
         String url = httpPrefix + prefServerDomain + "/api/v1/synchronize/upload-database";
@@ -1052,18 +1142,32 @@ public class ProcessSynchronizeData {
     public GroupAccessDB parseGroupAccess(String lineValue) {
         GroupAccessDB model = null;
 
-        try{
-            String [] arrLine = lineValue.split(Constants.FIELD_SAPERATE);
+        try {
+            String[] arrLine = lineValue.split(Constants.FIELD_SAPERATE);
+
             int gaId = Integer.parseInt(arrLine[0]);
             int groupId = Integer.parseInt(arrLine[1]);
             int machineId = Integer.parseInt(arrLine[2]);
             int timeSegId = Integer.parseInt(arrLine[3]);
-            model = new GroupAccessDB(gaId, groupId, machineId, timeSegId );
-        }catch ( Exception ex){
-            Log.e("SYNC", ex.getMessage());
+
+            int accessTurnType = (arrLine.length > 4) ? Integer.parseInt(arrLine[4]) : 0;
+            int accessTurnNumber = (arrLine.length > 5) ? Integer.parseInt(arrLine[5]) : 0;
+
+            model = new GroupAccessDB(); // dùng constructor mặc định
+            model.setId(gaId);
+            model.setGroupId(groupId);
+            model.setMachineId(machineId);
+            model.setTimeSegId(timeSegId);
+            model.setAccessTurnType(accessTurnType);
+            model.setAccessTurnNumber(accessTurnNumber);
+
+        } catch (Exception ex) {
+            Log.e("SYNC", "parseGroupAccess failed: " + ex.getMessage() + " → input = " + lineValue);
         }
+
         return model;
     }
+
 
     public TwinDB parseTwin(String lineValue) {
         TwinDB model = null;
@@ -1393,6 +1497,7 @@ public class ProcessSynchronizeData {
         SynchronizeSummaryPersonLog.getInstance(mContext).summaryAndSend();
     }
 
+
     public void reportAllPerson() throws JSONException {
         List<PersonReport> lsAllPersonInvalid = database.getAllPersonReport();
         LogPersonResponseServer.getInstance(mContext).responseLog(lsAllPersonInvalid);
@@ -1410,4 +1515,9 @@ public class ProcessSynchronizeData {
     private void showToast(String message){
         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
     }
+
+
+
+
+
 }

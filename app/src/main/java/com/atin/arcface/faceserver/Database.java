@@ -1,5 +1,7 @@
 package com.atin.arcface.faceserver;
 
+
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +11,8 @@ import android.util.Log;
 
 import com.atin.arcface.common.Constants;
 import com.atin.arcface.model.AccessTimeSegDB;
+import com.atin.arcface.model.CanteenDailyHistoryDB;
+import com.atin.arcface.model.CanteenMonthlyHistoryDB;
 import com.atin.arcface.model.CardDB;
 import com.atin.arcface.model.EventDB;
 import com.atin.arcface.model.EventReportModel;
@@ -16,6 +20,7 @@ import com.atin.arcface.model.FaceDB;
 import com.atin.arcface.model.FaceRegisterInfo;
 import com.atin.arcface.model.GroupAccessDB;
 import com.atin.arcface.model.MachineDB;
+import com.atin.arcface.model.MealByMonthDB;
 import com.atin.arcface.model.PersonAccessDB;
 import com.atin.arcface.model.PersonDB;
 import com.atin.arcface.model.PersonGroupDB;
@@ -25,19 +30,22 @@ import com.atin.arcface.util.ConfigUtil;
 import com.atin.arcface.util.Log4jHelper;
 import com.atin.arcface.util.StringUtils;
 
+import java.util.Date;
+
+
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Database extends SQLiteOpenHelper {
 
+
     // Phiên bản
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 9;
 
     // Tên cơ sở dữ liệu.
     private static final String TAG = "Database";
@@ -65,6 +73,27 @@ public class Database extends SQLiteOpenHelper {
 
     public static final String LOG = "LOG";
 
+    public static final String MEAL_BY_MONTH = "MEAL_BY_MONTH";
+    public static final String CANTEEN_DAILY_HISTORY = "CANTEEN_DAILY_HISTORY";
+    public static final String CANTEEN_MONTHLY_HISTORY = "CANTEEN_MONTHLY_HISTORY";
+
+    // ---- MEAL_BY_MONTH columns ----
+    public static final String COL_MB_MONTH        = "MONTH";
+    public static final String COL_MB_YEAR         = "YEAR";
+    public static final String COL_MB_EAT_COUNT    = "EAT_COUNT";
+    public static final String COL_MB_COMP_ID      = "COMP_ID";
+
+    // ---- CANTEEN_DAILY_HISTORY columns ----
+    public static final String COL_DH_PERSON_ID    = "PERSON_ID";
+    public static final String COL_DH_LOG_DATE     = "LOG_DATE";
+    public static final String COL_DH_NUMBER       = "NUMBER";
+
+    // ---- CANTEEN_MONTHLY_HISTORY columns ----
+    public static final String COL_MH_REPORT_MONTH = "REPORT_MONTH";
+    public static final String COL_MH_REPORT_YEAR  = "REPORT_YEAR";
+    public static final String COL_MH_TOTAL_NUMBER = "TOTAL_NUMBER";
+
+
     private Context mContext;
     private Logger logger;
 
@@ -86,6 +115,8 @@ public class Database extends SQLiteOpenHelper {
             ex.printStackTrace();
         }
     }
+
+
 
     public boolean isFieldExist(String tableName, String fieldName)
     {
@@ -264,12 +295,17 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(scriptAccessTime);
 
         //Bảng vùng truy nhập chi tiết
-        String scriptGroupAccess = "CREATE TABLE " + GROUP_ACCESS + " ( "
-                + "GA_ID INTEGER NOT NULL PRIMARY KEY, "
-                + "GROUP_ID INTEGER, "
-                + "MACHINE_ID INTEGER, "
-                + "TIME_SEG_ID INTEGER "
-                + " ) ";
+        String scriptGroupAccess =
+                "CREATE TABLE " + GROUP_ACCESS + " ( " +
+                        "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "GROUP_ID INTEGER, " +
+                        "MACHINE_ID INTEGER, " +
+                        "TIME_SEG_ID INTEGER, " +
+                        "DEVICE_CODE TEXT, " +
+                        "ACCESS_MODE INTEGER, " +
+                        "ACCESS_TURN_TYPE INTEGER DEFAULT 0, " +     // add
+                        "ACCESS_TURN_NUMBER INTEGER DEFAULT 0" +     // add
+                        ")";
         db.execSQL(scriptGroupAccess);
 
         // Script tạo bảng lưu thông tin check in, check out
@@ -324,6 +360,41 @@ public class Database extends SQLiteOpenHelper {
                 + "SIMILAR_PERSON_ID TEXT "
                 + ") ";
         db.execSQL(scriptTwins);
+
+
+        //Bảng lưu thông tin tổng số lượt ăn trong tháng
+        String scriptMealByMonth = "CREATE TABLE " + MEAL_BY_MONTH + " ( "
+                + "ID INTEGER NOT NULL PRIMARY KEY, "
+                + "MONTH INTEGER, "
+                + "YEAR INTEGER, "
+                + "EAT_COUNT INTEGER, "
+                + "COMP_ID INTEGER, "
+                + "IS_DELETE INTEGER, "
+                + "REGISTER_DATE TEXT "
+                + " ) ";
+        db.execSQL(scriptMealByMonth);
+
+        String CanteenDailyHistory = "CREATE TABLE " + CANTEEN_DAILY_HISTORY + " ( "
+                + "ID INTEGER NOT NULL PRIMARY KEY, "
+                + "PERSON_ID TEXT, "
+                + "LOG_DATE INTEGER, "
+                + "NUMBER INTEGER, "
+                + "IS_DELETE INTEGER "
+                + " ) ";
+        db.execSQL(CanteenDailyHistory);
+
+        String CanteenMonthlyHistory = "CREATE TABLE " + CANTEEN_MONTHLY_HISTORY + " ( "
+                + "ID INTEGER NOT NULL PRIMARY KEY, "
+                + "PERSON_ID TEXT, "
+                + "REPORT_MONTH INTEGER, "
+                + "REPORT_YEAR INTEGER, "
+                + "TOTAL_NUMBER INTEGER "
+                + ",IS_DELETE INTEGER "
+                + " ) ";
+        db.execSQL(CanteenMonthlyHistory);
+
+
+
     }
 
     @Override
@@ -507,6 +578,14 @@ public class Database extends SQLiteOpenHelper {
                         + ") ";
                 db.execSQL(scriptTwins);
             }
+
+            if(newVersion == 7){
+                db.execSQL("ALTER TABLE " + GROUP_ACCESS +
+                        " ADD COLUMN ACCESS_TURN_TYPE INTEGER DEFAULT 0");
+                db.execSQL("ALTER TABLE " + GROUP_ACCESS +
+                        " ADD COLUMN ACCESS_TURN_NUMBER INTEGER DEFAULT 0");
+
+            }
         }
 
         //VERSION4 - 2021-12-09
@@ -587,6 +666,42 @@ public class Database extends SQLiteOpenHelper {
                 db.execSQL(scriptTwins);
             }
         }
+
+        if (oldVersion < 7) {            // từ v6 lên v7
+            // THÊM cột vào GROUP_ACCESS
+            db.execSQL("ALTER TABLE " + GROUP_ACCESS +
+                    " ADD COLUMN ACCESS_TURN_TYPE INTEGER DEFAULT 0");
+            db.execSQL("ALTER TABLE " + GROUP_ACCESS +
+                    " ADD COLUMN ACCESS_TURN_NUMBER INTEGER DEFAULT 0");
+
+            // TẠO thêm 3 bảng mới
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + MEAL_BY_MONTH + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, MONTH INTEGER, YEAR INTEGER, EAT_COUNT INTEGER, COMP_ID INTEGER, IS_DELETE INTEGER DEFAULT 0, REGISTER_DATE TEXT)");
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + CANTEEN_DAILY_HISTORY + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, PERSON_ID TEXT, LOG_DATE TEXT, NUMBER INTEGER, IS_DELETE INTEGER DEFAULT 0)");
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + CANTEEN_MONTHLY_HISTORY + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, PERSON_ID TEXT, REPORT_MONTH INTEGER, REPORT_YEAR INTEGER, TOTAL_NUMBER INTEGER, IS_DELETE INTEGER DEFAULT 0)");
+        }
+
+        if (oldVersion < 9){
+            db.execSQL("ALTER TABLE EVENT ADD COLUMN LOG_DATE TEXT");
+            db.execSQL("ALTER TABLE EVENT ADD COLUMN TURN_TYPE INTEGER DEFAULT 0");
+            db.execSQL("ALTER TABLE GROUP_ACCESS ADD COLUMN GA_ID INTEGER DEFAULT 0");
+        }
+
+        //Check column in GroupAccess
+        if(!isColumnExists(db, GROUP_ACCESS, Constants.MACHINE_ID)){
+            db.execSQL("ALTER TABLE GROUP_ACCESS ADD COLUMN MACHINE_ID INTEGER");
+        }
+
+        if(!isColumnExists(db, GROUP_ACCESS, Constants.TIME_SEG_ID)){
+            db.execSQL("ALTER TABLE GROUP_ACCESS ADD COLUMN TIME_SEG_ID INTEGER");
+        }
+
+        if(!isColumnExists(db, GROUP_ACCESS, Constants.ACCESS_TURN_TYPE)){
+            db.execSQL("ALTER TABLE GROUP_ACCESS ADD COLUMN ACCESS_TURN_TYPE INTEGER");
+        }
+
+        if(!isColumnExists(db, GROUP_ACCESS, Constants.ACCESS_TURN_NUMBER)){
+            db.execSQL("ALTER TABLE GROUP_ACCESS ADD COLUMN ACCESS_TURN_NUMBER INTEGER");
+        }
     }
 
     public synchronized void clearDatabase () {
@@ -621,6 +736,22 @@ public class Database extends SQLiteOpenHelper {
             db.endTransaction();
             closeObject(db);
         }
+    }
+
+    public boolean isColumnExists(SQLiteDatabase db, String tableName, String columnName) {
+        Cursor cursor = db.rawQuery("PRAGMA table_info(" + tableName + ")", null);
+        boolean result = false;
+        if (cursor != null) {
+            int nameIndex = cursor.getColumnIndex("name");
+            while (cursor.moveToNext()) {
+                if (columnName.equals(cursor.getString(nameIndex))) {
+                    result = true;
+                    break;
+                }
+            }
+            cursor.close();
+        }
+        return result;
     }
 
     public synchronized void clearEventLog() {
@@ -2419,6 +2550,8 @@ public class Database extends SQLiteOpenHelper {
             values.put(Constants.GROUP_ID, model.getGroupId());
             values.put(Constants.MACHINE_ID, model.getMachineId());
             values.put(Constants.TIME_SEG_ID, model.getTimeSegId());
+            values.put(Constants.ACCESS_TURN_TYPE, model.getAccessTurnType());
+            values.put(Constants.ACCESS_TURN_NUMBER, model.getAccessTurnNumber());
             db.insert(GROUP_ACCESS, null, values);
         }catch (Exception ex){
             Log.e(TAG, ex.getMessage());
@@ -2439,6 +2572,8 @@ public class Database extends SQLiteOpenHelper {
                 values.put(Constants.GROUP_ID, model.getGroupId());
                 values.put(Constants.MACHINE_ID, model.getMachineId());
                 values.put(Constants.TIME_SEG_ID, model.getTimeSegId());
+                values.put(Constants.ACCESS_TURN_TYPE, model.getAccessTurnType());
+                values.put(Constants.ACCESS_TURN_NUMBER, model.getAccessTurnNumber());
                 db.insert(GROUP_ACCESS, null, values);
             }
             db.setTransactionSuccessful();
@@ -2506,7 +2641,9 @@ public class Database extends SQLiteOpenHelper {
                             Constants.GA_ID,
                             Constants.GROUP_ID,
                             Constants.MACHINE_ID,
-                            Constants.TIME_SEG_ID
+                            Constants.TIME_SEG_ID,
+                            Constants.ACCESS_TURN_TYPE,
+                            Constants.ACCESS_TURN_NUMBER
                     },
                     Constants.GA_ID + "=?", new String[] { String.valueOf(id) },
                     null, null, null);
@@ -2516,7 +2653,9 @@ public class Database extends SQLiteOpenHelper {
                         cursor.getInt(0), //GA_ID
                         cursor.getInt(1), //GROUP_ID
                         cursor.getInt(2), //MACHINE_ID
-                        cursor.getInt(3) //TIME_SEG_ID
+                        cursor.getInt(3), //TIME_SEG_ID
+                        cursor.getInt(4), //ACCESS_TURN_TYPE
+                        cursor.getInt(5) //ACCESS_TURN_NUMBER
                 );
             }
         }catch (Exception ex){
@@ -2540,7 +2679,9 @@ public class Database extends SQLiteOpenHelper {
                             Constants.GA_ID,
                             Constants.GROUP_ID,
                             Constants.MACHINE_ID,
-                            Constants.TIME_SEG_ID
+                            Constants.TIME_SEG_ID,
+                            Constants.ACCESS_TURN_TYPE,
+                            Constants.ACCESS_TURN_NUMBER
                     },
                     Constants.MACHINE_ID + "=?", new String[] { String.valueOf(machineId) },
                     null, null, null);
@@ -2549,10 +2690,12 @@ public class Database extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     GroupAccessDB model = new GroupAccessDB(
-                            cursor.getInt(0),
-                            cursor.getInt(1),
-                            cursor.getInt(2),
-                            cursor.getInt(3)
+                            cursor.getInt(0),//GA_ID
+                            cursor.getInt(1),//GROUP_ID
+                            cursor.getInt(2),//MACHINE_ID
+                            cursor.getInt(3), //TIME_SEG_ID
+                            cursor.getInt(4), //ACCESS_TURN_TYPE
+                            cursor.getInt(5) //ACCESS_TURN_NUMBER
                     );
                     // Add list.
                     lsData.add(model);
@@ -2576,40 +2719,44 @@ public class Database extends SQLiteOpenHelper {
         return lsData;
     }
 
-    public synchronized List<GroupAccessDB> getListGroupAccessByGroup (int groupId) {
+    public synchronized List<GroupAccessDB> getListGroupAccessByGroup(int groupId) {
         List<GroupAccessDB> lsData = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
 
-        try{
-            cursor = db.query(GROUP_ACCESS, new String[] {
+        try {
+            cursor = db.query(GROUP_ACCESS, new String[]{
                             Constants.GA_ID,
                             Constants.GROUP_ID,
                             Constants.MACHINE_ID,
-                            Constants.TIME_SEG_ID
+                            Constants.TIME_SEG_ID,
+                            Constants.ACCESS_TURN_TYPE,
+                            Constants.ACCESS_TURN_NUMBER
                     },
-                    Constants.GROUP_ID + "= ? ", new String[] { String.valueOf(groupId) },
+                    Constants.GROUP_ID + " = ?", new String[]{String.valueOf(groupId)},
                     null, null, null);
 
-            // Duyệt trên con trỏ, và thêm vào danh sách.
             if (cursor.moveToFirst()) {
                 do {
                     GroupAccessDB model = new GroupAccessDB(
-                            cursor.getInt(0),
-                            cursor.getInt(1),
-                            cursor.getInt(2),
-                            cursor.getInt(3)
+                            cursor.getInt(0),//GA_ID
+                            cursor.getInt(1),//GROUP_ID
+                            cursor.getInt(2),//MACHINE_ID
+                            cursor.getInt(3), //TIME_SEG_ID
+                            cursor.getInt(4), //ACCESS_TURN_TYPE
+                            cursor.getInt(5) //ACCESS_TURN_NUMBER
                     );
                     // Add list.
                     lsData.add(model);
                 } while (cursor.moveToNext());
             }
-        }catch (Exception ex){
-            Log.e(TAG, ex.getMessage());
+        } catch (Exception ex) {
+            Log.e("GroupAccessDAO", "Error getListGroupAccessByGroup: " + ex.getMessage());
         } finally {
             closeObject(cursor);
             closeObject(db);
         }
+
         return lsData;
     }
     //End group access
@@ -2721,6 +2868,9 @@ public class Database extends SQLiteOpenHelper {
                     },
                     Constants.MACHINE_ID + " =? AND " + Constants.PERSON_ID + " =? AND " + Constants.IS_DELETE + " = 0",
                     new String[] { String.valueOf(machineId), personId },null, null, null);
+            if(cursor != null) {
+                Log.d("DEBUG-CHECK", "cursor.getCount()=" + cursor.getCount());
+            }
 
             // Duyệt trên con trỏ, và thêm vào danh sách.
             if (cursor.moveToFirst()) {
@@ -2772,6 +2922,7 @@ public class Database extends SQLiteOpenHelper {
                     },
                     Constants.MACHINE_ID + "=?", new String[] { String.valueOf(machineId) },
                     null, null, null);
+
 
             // Duyệt trên con trỏ, và thêm vào danh sách.
             if (cursor.moveToFirst()) {
@@ -4216,27 +4367,50 @@ public class Database extends SQLiteOpenHelper {
 
     // Phương thức để lấy cấu trúc của một bảng
     public String getTableStructure(String tableName) {
-        StringBuffer strStructure = new StringBuffer();
-        try{
-            SQLiteDatabase db = this.getReadableDatabase();
-            Cursor cursor = db.rawQuery("PRAGMA table_info(" + tableName + ")", null);
+        StringBuilder strStructure = new StringBuilder();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = this.getReadableDatabase();
+            cursor = db.rawQuery("PRAGMA table_info(" + tableName + ")", null);
 
             if (cursor != null) {
-                try {
-                    while (cursor.moveToNext()) {
-                        String columnName = cursor.getString(cursor.getColumnIndex("name"));
-                        String columnType = cursor.getString(cursor.getColumnIndex("type"));
-                        strStructure.append(columnName + ":" + columnType + "\n");
+                // Lấy index 1 lần, ngoài vòng loop
+                int idxName = cursor.getColumnIndex("name");
+                int idxType = cursor.getColumnIndex("type");
+
+                while (cursor.moveToNext()) {
+                    String columnName = "";
+                    String columnType = "";
+
+                    if (idxName >= 0) {
+                        columnName = cursor.getString(idxName);
+                    } else {
+                        logger.warn("Column 'name' not found in PRAGMA for " + tableName);
                     }
-                } finally {
-                    cursor.close();
+
+                    if (idxType >= 0) {
+                        columnType = cursor.getString(idxType);
+                    } else {
+                        logger.warn("Column 'type' not found in PRAGMA for " + tableName);
+                    }
+
+                    strStructure
+                            .append(columnName)
+                            .append(":")
+                            .append(columnType)
+                            .append("\n");
                 }
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.error("Error getTableStructure " + tableName + " " + ex.getMessage());
+        } finally {
+            if (cursor != null) cursor.close();
+            if (db != null) db.close();
         }
         return strStructure.toString();
     }
+
 
 
     public Map<String, String> getDatabaseStructure(){
@@ -4282,4 +4456,204 @@ public class Database extends SQLiteOpenHelper {
             db.close();
         }
     }
+
+    /* eat quota*/
+
+    /** Lấy quota EatCount của 1 đơn vị trong tháng - trả null nếu chưa sync */
+    public MealByMonthDB getMealQuota( int month, int year) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.query(MEAL_BY_MONTH,
+                null,
+                 COL_MB_MONTH + "=? AND " + COL_MB_YEAR + "=? AND IS_DELETE=0",
+                new String[]{ String.valueOf(month), String.valueOf(year)},
+                null,null,null);
+        MealByMonthDB e = null;
+        if (c.moveToFirst()) {
+            e = new MealByMonthDB();
+            e.setId(          c.getInt(c.getColumnIndexOrThrow("ID")));
+            e.setMonth(       c.getInt(c.getColumnIndexOrThrow(COL_MB_MONTH)));
+            e.setYear(        c.getInt(c.getColumnIndexOrThrow(COL_MB_YEAR)));
+            e.setEatCount(    c.getInt(c.getColumnIndexOrThrow(COL_MB_EAT_COUNT)));
+            e.setCompId(      c.getInt(c.getColumnIndexOrThrow(COL_MB_COMP_ID)));
+        }
+        c.close();
+        return e;
+    }
+
+    /** Đếm lượt đã ăn trong NGÀY */
+    public int countDaily(String personId, String logDateIso) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(
+                "SELECT IFNULL(SUM(" + COL_DH_NUMBER + "),0) FROM " + CANTEEN_DAILY_HISTORY +
+                        " WHERE " + COL_DH_PERSON_ID + "=? AND " + COL_DH_LOG_DATE + "=? AND IS_DELETE=0",
+                new String[]{personId, logDateIso});
+        int cnt = 0;
+        if (c.moveToFirst()) cnt = c.getInt(0);
+        c.close();
+        return cnt;
+    }
+
+    /** Đếm lượt đã ăn trong THÁNG */
+    public int countMonthly(String personId, int month, int year) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(
+                "SELECT IFNULL(" + COL_MH_TOTAL_NUMBER + ",0) FROM " + CANTEEN_MONTHLY_HISTORY +
+                        " WHERE " + COL_DH_PERSON_ID + "=? AND " + COL_MH_REPORT_MONTH + "=? AND " + COL_MH_REPORT_YEAR + "=? AND IS_DELETE=0",
+                new String[]{personId, String.valueOf(month), String.valueOf(year)});
+        int total = 0;
+        if (c.moveToFirst()) total = c.getInt(0);
+        c.close();
+        return total;
+    }
+
+    /**
+     * Tăng lượt ăn (daily+monthly) **atomically**.
+     * Nếu record chưa tồn tại → insert; tồn tại → update.
+     * Trả về true nếu OK, false nếu lỗi DB.
+     */
+    public void increaseDailyAndMonthly(String personId, String logDateIso) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            // --- DAILY ---
+            int daily = countDaily(personId, logDateIso);
+            ContentValues cvDaily = new ContentValues();
+            cvDaily.put(COL_DH_PERSON_ID, personId);
+            cvDaily.put(COL_DH_LOG_DATE, logDateIso);
+            cvDaily.put(COL_DH_NUMBER, daily + 1);
+            cvDaily.put("IS_DELETE", 0);
+            // update → nếu =0 row affected => insert mới
+            int rows = db.update(CANTEEN_DAILY_HISTORY, cvDaily,
+                    COL_DH_PERSON_ID + "=? AND " + COL_DH_LOG_DATE + "=?",
+                    new String[]{personId, logDateIso});
+            if (rows == 0) db.insert(CANTEEN_DAILY_HISTORY, null, cvDaily);
+
+            // --- MONTHLY ---
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(java.sql.Date.valueOf(logDateIso));
+            int month = cal.get(Calendar.MONTH) + 1;  // 0-based
+            int year  = cal.get(Calendar.YEAR);
+
+            int monthly = countMonthly(personId, month, year);
+            ContentValues cvMonth = new ContentValues();
+            cvMonth.put(COL_DH_PERSON_ID, personId);
+            cvMonth.put(COL_MH_REPORT_MONTH, month);
+            cvMonth.put(COL_MH_REPORT_YEAR, year);
+            cvMonth.put(COL_MH_TOTAL_NUMBER, monthly + 1);
+            cvMonth.put("IS_DELETE", 0);
+
+            rows = db.update(CANTEEN_MONTHLY_HISTORY, cvMonth,
+                    COL_DH_PERSON_ID + "=? AND " + COL_MH_REPORT_MONTH + "=? AND " + COL_MH_REPORT_YEAR + "=?",
+                    new String[]{personId, String.valueOf(month), String.valueOf(year)});
+            if (rows == 0) db.insert(CANTEEN_MONTHLY_HISTORY, null, cvMonth);
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /** Thêm hoặc cập nhật quota ăn theo tháng của 1 công ty */
+    public void insertOrUpdateMealQuota(MealByMonthDB quota) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor c = db.query(MEAL_BY_MONTH,
+                null,
+                COL_MB_COMP_ID + "=? AND " + COL_MB_MONTH + "=? AND " + COL_MB_YEAR + "=? AND IS_DELETE=0",
+                new String[]{
+                        String.valueOf(quota.getCompId()),
+                        String.valueOf(quota.getMonth()),
+                        String.valueOf(quota.getYear())
+                },
+                null, null, null);
+
+        ContentValues cv = new ContentValues();
+        cv.put("ID", quota.getId()); // optional nếu bạn quản lý ID từ server
+        cv.put(COL_MB_COMP_ID, quota.getCompId());
+        cv.put(COL_MB_MONTH, quota.getMonth());
+        cv.put(COL_MB_YEAR, quota.getYear());
+        cv.put(COL_MB_EAT_COUNT, quota.getEatCount());
+        cv.put("IS_DELETE", 0);
+
+        if (c.moveToFirst()) {
+            // Đã có → update
+            db.update(MEAL_BY_MONTH, cv,
+                    COL_MB_COMP_ID + "=? AND " + COL_MB_MONTH + "=? AND " + COL_MB_YEAR + "=?",
+                    new String[]{
+                            String.valueOf(quota.getCompId()),
+                            String.valueOf(quota.getMonth()),
+                            String.valueOf(quota.getYear())
+                    });
+        } else {
+            // Chưa có → insert
+            db.insert(MEAL_BY_MONTH, null, cv);
+        }
+
+        c.close();
+    }
+    public void clearTable(String tableName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tableName, null, null);
+        db.close();
+    }
+    public void insertEventLog(EventDB event) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("eventId", event.getEventId());
+        values.put("personId", event.getPersonId());
+        values.put("faceId", event.getFaceId());
+        values.put("fingerId", event.getFingerId());
+        values.put("cardNo", event.getCardNo());
+        values.put("facePath", event.getFacePath());
+        values.put("face64", event.getFace64());
+        values.put("machineId", event.getMachineId());
+        values.put("deviceCode", event.getDeviceCode());
+        values.put("accessDate", event.getAccessDate());
+        values.put("accessTime", event.getAccessTime());
+        values.put("accessType", event.getAccessType());
+        values.put("temperature", event.getTemperature());
+        values.put("gender", event.getGender());
+        values.put("age", event.getAge());
+        values.put("wearMask", event.getWearMask());
+        values.put("scoreMatch", event.getScoreMatch());
+        values.put("errorCode", event.getErrorCode());
+        values.put("status", event.getStatus());
+        values.put("compId", event.getCompId());
+        values.put("note", event.getNote());
+        values.put("uploadStatus", event.getUploadStatus());
+
+        db.insert("EVENT", null, values);
+        db.close();
+    }
+
+    /** replace-or-insert one daily row */
+    public void insertOrUpdateDaily(CanteenDailyHistoryDB d) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("ID", d.getId());
+        cv.put(COL_DH_PERSON_ID, d.getPersonId());
+        cv.put(COL_DH_LOG_DATE, d.getLogDate());
+        cv.put(COL_DH_NUMBER, d.getNumber());
+        cv.put("IS_DELETE", d.isDelete() ? 1 : 0);
+
+        int rows = db.update(CANTEEN_DAILY_HISTORY, cv, "ID=?", new String[]{String.valueOf(d.getId())});
+        if (rows == 0) db.insert(CANTEEN_DAILY_HISTORY, null, cv);
+    }
+
+    /** replace-or-insert one monthly row */
+    public void insertOrUpdateMonthly(CanteenMonthlyHistoryDB m) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("ID", m.getId());
+        cv.put(COL_DH_PERSON_ID, m.getPersonId());
+        cv.put(COL_MH_REPORT_MONTH, m.getReportMonth());
+        cv.put(COL_MH_REPORT_YEAR,  m.getReportYear());
+        cv.put(COL_MH_TOTAL_NUMBER, m.getTotalNumber());
+        cv.put("IS_DELETE", m.isDelete() ? 1 : 0);
+
+        int rows = db.update(CANTEEN_MONTHLY_HISTORY, cv, "ID=?", new String[]{String.valueOf(m.getId())});
+        if (rows == 0) db.insert(CANTEEN_MONTHLY_HISTORY, null, cv);
+    }
+
 }

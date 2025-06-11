@@ -215,7 +215,7 @@ public class ShowFaceInfoAdapter extends RecyclerView.Adapter<ShowFaceInfoAdapte
                         holder.txtNotification.setText("Bạn có muốn đồng ý sử dụng bữa ăn này?");
                         holder.btnConfirm.setVisibility(View.VISIBLE);
                         holder.btnCancel.setVisibility(View.VISIBLE);
-                        SingletonObject.getInstance(context).getMainActivity().updateWaitDialogTime(30000);
+                        SingletonObject.getInstance(context).getMainActivity().updateWaitDialogTime(20000);
                     }
                     break;
 

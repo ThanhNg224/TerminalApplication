@@ -66,6 +66,9 @@ public class SynchronizeDataService extends Service {
     public void onCreate() {
         super.onCreate();
         initValue();
+        Log.d("SYNC","Service onCreate()");
+        Log.d("SYNC","Service onStartCommand()");
+
 
         // Tạo một HandlerThread và bắt đầu nó
         handlerThread = new HandlerThread("SynchronizeDataThread", THREAD_PRIORITY_BACKGROUND);
@@ -123,9 +126,11 @@ public class SynchronizeDataService extends Service {
     }
 
     public void doSynchronize(){
+        Log.d("SYNC", "🌐 doSynchronize() start");
         String domain = SingletonObject.getInstance(getApplicationContext()).getDomain();
         String imei = SingletonObject.getInstance(getApplicationContext()).getImei();
         String url = domain + "/api/v1/synchronize/" + imei;
+
 
         if(pref == null){
             pref = getSharedPreferences(Constants.SHARE_PREFERENCE, MODE_PRIVATE);
@@ -133,7 +138,7 @@ public class SynchronizeDataService extends Service {
 
         long diffMinute = TimeUnit.MILLISECONDS.toMinutes(Math.abs(requestFlag.getRequestTime().getTime() - Calendar.getInstance().getTime().getTime()));
         if(requestFlag.isAvailable() || diffMinute > 5)
-        {
+        {Log.d("SYNC", "🌐 calling getRequest with URL=" + url);
             requestFlag.setRequestTime(Calendar.getInstance().getTime());
             requestFlag.setAvailable(false);
             getRequest(url);
@@ -143,6 +148,10 @@ public class SynchronizeDataService extends Service {
     private void getRequest(String url) {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, new JSONArray(),
                 response -> {
+                    Log.d("SYNC", "🌐 fetched "
+                            + response.length()
+                            + " SyncRequests: "
+                            + response.toString());
                     if(blockingQueueResult.isEmpty()){
                         excutorResult.execute(() -> {
                             processData(response.toString());
@@ -179,7 +188,7 @@ public class SynchronizeDataService extends Service {
     private void processData(String jsonData){
         ConfigUtil.setSyncingData(getApplicationContext(), true);
         boolean needReload = false;
-
+        Log.d("SYNC", "🔄 processData: " + jsonData);
         try {
             Type listType = new TypeToken<ArrayList<SyncRequest>>(){}.getType();
             List<SyncRequest> listData = mGson.fromJson(jsonData, listType);

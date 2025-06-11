@@ -13,7 +13,7 @@ public class CompareResult {
     private String facePath;
     private boolean isMask;
     private float similar;
-    private int trackId;
+    public int trackId;
     private String summaryCode;
     private String detailCode;
     private float temperature;
@@ -29,6 +29,7 @@ public class CompareResult {
     private String deviceCode;
     private FaceInfoCapture faceInfoCapture;
     private Camera.Size previewSize;
+    private int canteenStatus; public void setCanteenStatus(int s){ this.canteenStatus = s; } public int getCanteenStatus(){ return canteenStatus; }
 
     public CompareResult() {}
 

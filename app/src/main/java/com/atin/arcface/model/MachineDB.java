@@ -43,7 +43,7 @@ public class MachineDB {
     private double noMaskQualityThreshold;
     private double maskQualityThreshold;
     private double regQualityThreshold;
-    private int autoSleep;;
+    private int autoSleep;
 
     public MachineDB(int machineId, int compId, String deviceName, int deviceType, int deviceFunction, String ipaddress, String imei, String mac, String serverIp, int serverPort, int fraudProof, int angleDetect, int autoStart, int autoSaveVisitor, int distanceDetect, String username, String password, String logo, int volume, int brightness, int delay, int led, double fingerThreshold, double faceThreshold, double temperatureThreshold, String firmwareVersion, String usernameServer, String passwordServer, int useMask, int useTemperature, int useVaccine, int usePCCovid, String pccovidPhone, String pccovidLocation, String pccovidToken, int dailyReboot, String restartTime, String language, int noDelay, double noMaskQualityThreshold, double maskQualityThreshold, double regQualityThreshold, int autoSleep) {
         this.machineId = machineId;

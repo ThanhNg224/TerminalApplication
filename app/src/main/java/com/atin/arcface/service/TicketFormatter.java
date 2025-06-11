@@ -27,7 +27,7 @@ public class TicketFormatter {
                 return;
             }
 
-            Bitmap logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo);
+            Bitmap logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.geleximco);
             int widthDots = 384;
             int heightDots = (int) (logo.getHeight() * (widthDots / (double) logo.getWidth()));
             Bitmap scaledLogo = Bitmap.createScaledBitmap(logo, widthDots, heightDots, false);

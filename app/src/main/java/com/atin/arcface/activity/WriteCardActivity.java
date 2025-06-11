@@ -13,11 +13,13 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.atin.arcface.R;
 import com.atin.arcface.common.Constants;
+//import com.rabbitmq.client.Channel;
+//import com.rabbitmq.client.Connection;
+//import com.rabbitmq.client.ConnectionFactory;
+//import com.rabbitmq.client.MessageProperties;
 
 import java.nio.charset.Charset;
 
@@ -42,19 +44,12 @@ public class WriteCardActivity extends AppCompatActivity {
         mNfcAdapter = mNfcManager.getDefaultAdapter();
         if (mNfcAdapter == null) {
             showToast(this.getString(R.string.message_nfc_notsupport));
-        } else if (!mNfcAdapter.isEnabled()) {
+        } else if ((mNfcAdapter != null) && (!mNfcAdapter.isEnabled())) {
             showToast(this.getString(R.string.message_nfc_notwork));
-        } else {
+        } else if ((mNfcAdapter != null) && (mNfcAdapter.isEnabled())) {
             showToast(this.getString(R.string.message_nfc_working));
         }
-
-        mPendingIntent = PendingIntent.getActivity(
-                this,
-                0,
-                new Intent(this, getClass()),
-                PendingIntent.FLAG_IMMUTABLE
-        );
-
+        mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()), 0);
         init_NFC();
     }
 
@@ -91,6 +86,7 @@ public class WriteCardActivity extends AppCompatActivity {
     }
 
     private void readFromNFC(Ndef ndef) {
+
         try {
             ndef.connect();
             NdefMessage ndefMessage = ndef.getNdefMessage();
@@ -102,14 +98,12 @@ public class WriteCardActivity extends AppCompatActivity {
         }
     }
 
-    private void writeToNfc(Ndef ndef, String cardCode) {
+    private void writeToNfc(Ndef ndef, String cardCode){
+
         if (ndef != null) {
             try {
                 ndef.connect();
-                NdefRecord mimeRecord = NdefRecord.createMime(
-                        "text/plain",
-                        cardCode.getBytes(Charset.forName("US-ASCII"))
-                );
+                NdefRecord mimeRecord = NdefRecord.createMime("text/plain", cardCode.getBytes(Charset.forName("US-ASCII")));
                 ndef.writeNdefMessage(new NdefMessage(mimeRecord));
                 ndef.close();
                 showToast("Ghi thẻ thành công");

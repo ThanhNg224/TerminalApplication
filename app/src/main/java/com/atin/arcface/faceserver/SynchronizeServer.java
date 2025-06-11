@@ -91,6 +91,10 @@ public class SynchronizeServer {
     private void getRequest(String url) {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, new JSONArray(),
                 response -> {
+                    Log.d("SYNC", "🌐 fetched "
+                            + response.length()
+                            + " SyncRequests: "
+                            + response.toString());
                     if(blockingQueueResult.isEmpty()){
                         excutorResult.execute(() -> {
                             processData(response.toString());

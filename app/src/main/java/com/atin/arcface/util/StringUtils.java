@@ -1,10 +1,7 @@
 package com.atin.arcface.util;
 
-import android.util.Base64;
-
 import com.atin.arcface.R;
 import com.atin.arcface.activity.Application;
-import com.atin.arcface.common.Constants;
 import com.atin.arcface.model.Language;
 
 import org.json.JSONObject;
@@ -190,7 +187,7 @@ public class StringUtils {
         }
     }
 
-    public static String plusDayToDate (String date, int addDay) {
+    public static String plusDayToDate (String date, int addDay, String s) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         try{

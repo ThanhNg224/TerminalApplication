@@ -2,6 +2,11 @@ package com.atin.arcface.common;
 
 public class Constants {
     public static final String MOI_TRUONG = PartnerName.GELEXIMCO;
+    public static final int MAX_EAT_PER_DAY = 2;
+
+    public static final int UPLOAD_PENDING = 0;
+    public static final int UPLOAD_DONE = 1;
+
 
     public class PartnerName {
         public static final String DEVELOP = "DEVELOP";
@@ -385,6 +390,10 @@ public class Constants {
     public static final String AUTO_SLEEP = "AUTO_SLEEP";
     public static final String SHOW_NOTIFICATION = "SHOW_NOTIFICATION";
 
+    public static final String ACCESS_TURN_TYPE = "ACCESS_TURN_TYPE";
+
+    public static final String ACCESS_TURN_NUMBER = "ACCESS_TURN_NUMBER";
+
     public static final int FACE_RECOGNIZE = 1;
     public static final int CARD_RECOGNIZE = 2;
     public static final int FINGER_RECOGNIZE = 3;
@@ -400,6 +409,9 @@ public class Constants {
     public static final int CHECK_OUT = 2;
     public static final int TIME_KEEPING = 3;
     public static final int CANTEEN = 4;
+
+    // table moi
+
 
     public static final String REQUEST_ID = "REQUEST_ID";
     public static final String INIT_PREFERENCE = "INIT_PREFERENCE";
@@ -421,8 +433,8 @@ public class Constants {
     public class AccessType{
         public static final int FACE_RECOGNIZE = 1;
         public static final int CARD_RECOGNIZE = 2;
-        public static final int FINGER_RECOGNIZE = 3;
         public static final int QRCODE_RECOGNIZE = 4;
+        public static final int CANTEEN       = 3;
     }
 
     public static class SyncDataType
@@ -452,6 +464,10 @@ public class Constants {
         public static final int TWIN = 23;
         public static final int CLEAR_LOG_FILE = 24;
         public static final int RESEND_EVENT = 25;
+
+        public static final int MEAL_BY_MONTH = 26;
+        public static final int CANTEEN_DAILY_HISTORY_SNAP   = 27;
+        public static final int CANTEEN_MONTHLY_HISTORY_SNAP = 28;
     }
 
     public static class SyncAction
@@ -512,4 +528,9 @@ public class Constants {
         public static final int RELOAD = 2;
         public static final int RESTART = 3;
     }
+    public static class EventStatus {
+        public static final int WAIT_SYNC = 0;   // chưa đẩy lên server
+        public static final int SYNCED    = 1;   // đã đồng bộ
+    }
+
 }

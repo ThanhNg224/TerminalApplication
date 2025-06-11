@@ -3,6 +3,8 @@ package com.atin.arcface.common;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.util.Log;
+
 import com.atin.arcface.R;
 import com.atin.arcface.activity.Application;
 import com.atin.arcface.util.ConfigUtil;
@@ -13,6 +15,10 @@ public class EmitSound {
     private static MediaPlayer mp;
 
     public static void openSound (Context context, String summaryCode, String detailCode) {
+        if (summaryCode == null) {
+            Log.e("EmitSound", "❌ summaryCode is null – skip playing sound");
+            return;
+        }
         switch(summaryCode){
             case ErrorCode.COMMON_HIGHT_TEMPERATURE:
                 if(LanguageUtils.getCurrentLanguage().getCode().equals(Application.getInstance().getString(R.string.language_vietnamese_code))){

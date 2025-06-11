@@ -81,6 +81,8 @@ import com.atin.arcface.model.FaceInfoCapture;
 import com.atin.arcface.model.FacePreviewInfo;
 import com.atin.arcface.model.InitEngineFailureLog;
 import com.atin.arcface.model.MachineDB;
+import com.atin.arcface.model.MealByMonthDB;
+import com.atin.arcface.model.PersonAccessDB;
 import com.atin.arcface.model.PersonDB;
 import com.atin.arcface.model.TemperatureError;
 import com.atin.arcface.service.CrashExceptionHandler;
@@ -286,6 +288,11 @@ public class RegisterAndRecognizeDualActivity extends BaseActivity implements Vi
     //message send performance to service
     private Messenger serviceMessenger;
 
+    public MachineDB getThisDevice() {
+        return thisDevice;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -348,6 +355,7 @@ public class RegisterAndRecognizeDualActivity extends BaseActivity implements Vi
 
         //Trạng thái phần cứng khi khởi tạo
         initHardwareState(Build.MODEL);
+
 
         //Auto start application
         Thread.setDefaultUncaughtExceptionHandler(new CrashExceptionHandler(this));
@@ -1725,50 +1733,8 @@ public class RegisterAndRecognizeDualActivity extends BaseActivity implements Vi
         return true;
     }
 
-    private void checkPersonPermission(String personId, CompareResult compareResult, float flTemperature){
-        if(prefMachineFunction == Constants.CANTEEN){
-            if(!ConfigUtil.getNetworkAvailable()){
-                Toast.makeText(getApplicationContext(), "Vui lòng kiểm tra kết nối mạng", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            FaceInfoCapture faceInfoCapture = hmFaceCapture.get(compareResult.getTrackId());
-            compareResult.setFaceInfoCapture(faceInfoCapture);
-            checkCanteenPermission(personId, compareResult);
-        }else{
-            checkNormalPermission(personId, compareResult, flTemperature);
-        }
-    }
-
-    private void checkNormalPermission(String personId, CompareResult compareResult, float flTemperature){
-        try{
-            AccessResult accessResult = accessBussiness.checkAccessPermission(personId, compareResult.isMask(), flTemperature, prefMachineFunction, Constants.AccessType.FACE_RECOGNIZE);
-            compareResult.setSummaryCode(accessResult.getSumaryCode());
-            compareResult.setDetailCode(accessResult.getDetailCode());
-
-            logger.info("Check permission"
-                    + " - PersonId: " + compareResult.getPersonId()
-                    + " - Errorcode: " + compareResult.getSummaryCode() + "/" + compareResult.getDetailCode()
-            );
-
-            processResult(compareResult, false);
-        }catch (Exception ex){
-            logger.error("Error checkPersonPermission " + ex.getMessage());
-        }
-    }
-
-    private void checkCanteenPermission(String personId, CompareResult compareResult){
-        try{
-            accessBussiness.checkCanteenPermission(personId, BaseUtil.getImeiNumber(RegisterAndRecognizeDualActivity.this), compareResult);
-
-            logger.info("Check CanteenPermission"
-                    + " - PersonId: " + compareResult.getPersonId()
-                    + " - Errorcode: " + compareResult.getSummaryCode() + "/" + compareResult.getDetailCode()
-            );
-
-            //processResult(compareResult, false);
-        }catch (Exception ex){
-            logger.error("Error check CanteenPermission " + ex.getMessage());
-        }
+    private void checkPersonPermission(String personId, CompareResult cmp, float temp) {
+        accessBussiness.checkPermission(cmp, personId);
     }
 
     public void processResult(CompareResult compareResult, boolean faceNotFound) {
@@ -1826,7 +1792,7 @@ public class RegisterAndRecognizeDualActivity extends BaseActivity implements Vi
         }
     }
 
-    public void processCanteenResult(CompareResult compareResult) {
+    public void showDialogConfirmCanteen(CompareResult compareResult) {
         try {
             String sumaryCode = compareResult.getSummaryCode();
             String detailCode = compareResult.getDetailCode();
@@ -2301,16 +2267,28 @@ public class RegisterAndRecognizeDualActivity extends BaseActivity implements Vi
         }
     };
 
-    public void confirmCanteen(CompareResult compareResult){
-        String url = SingletonObject.getInstance(getApplicationContext()).getDomain() + "/api/v1/confirmCanteenUsed";
+    public void confirmCanteen(CompareResult compareResult) {
         try {
             compareResult.setPreviewSize(previewSize);
             compareResult.setMachineId(thisDevice.getMachineId());
-            accessBussiness.confirmCanteenUsage(url, compareResult);
+
+            accessBussiness.confirmCanteenUsageLocal(compareResult);
+
+
+            processResult(compareResult, true);
+
+
+            compareResultList.clear();
+            adapter.notifyDataSetChanged();
+
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),
+                    "Lỗi xác nhận suất ăn: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
         }
     }
+
 
     public void updateWaitDialogTime(int delayTime){
         prefDelayRecognizeTime = delayTime;
