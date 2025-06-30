@@ -789,14 +789,14 @@ public class Database extends SQLiteOpenHelper {
 
     public synchronized List<FaceRegisterInfo> getAllActivePerson() {
         String selectQuery =
-              " SELECT p.PERSON_ID, COMP_ID, DEPT_ID, PERSON_CODE, "
-            + " FULL_NAME, POSITION, JOBDUTIES, FACE_FEATURE, "
-            + " FACE_PATH, p.STATUS "
-            + " FROM PERSON p, FACE f "
-            + " WHERE p.PERSON_ID = f.PERSON_ID "
-            + " AND p.STATUS = 1 "
-            + " AND f.FACE_STATUS = 1 ";
-            //+ " AND (p.PERSON_TYPE IS NULL OR p.PERSON_TYPE = 1) ";
+                " SELECT p.PERSON_ID, COMP_ID, DEPT_ID, PERSON_CODE, "
+                        + " FULL_NAME, POSITION, JOBDUTIES, FACE_FEATURE, "
+                        + " FACE_PATH, p.STATUS "
+                        + " FROM PERSON p, FACE f "
+                        + " WHERE p.PERSON_ID = f.PERSON_ID "
+                        + " AND p.STATUS = 1 "
+                        + " AND f.FACE_STATUS = 1 ";
+        //+ " AND (p.PERSON_TYPE IS NULL OR p.PERSON_TYPE = 1) ";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = null;
@@ -874,18 +874,18 @@ public class Database extends SQLiteOpenHelper {
     public synchronized List<FaceRegisterInfo> getGuestExpired (int machineId, int totalExpiredDay) {
         String selectQuery =
                 " SELECT PERSON_ID, COMP_ID, DEPT_ID, PERSON_CODE, "
-            + " FULL_NAME, POSITION, JOBDUTIES, STATUS "
-            + " FROM PERSON p "
-            + " WHERE p.STATUS = 1 "
-            + " AND p.PERSON_TYPE = 2 "
-            + " AND p.PERSON_ID IN (SELECT PERSON_ID FROM PERSON_ACCESS WHERE PERSON_ID = p.PERSON_ID AND (FROM_DATE > ? OR TO_DATE < ?) AND IS_DELETE = 0) "
-            + " UNION ALL "
-            + " SELECT PERSON_ID, COMP_ID, DEPT_ID, PERSON_CODE, "
-            + " FULL_NAME, POSITION, JOBDUTIES, STATUS "
-            + " FROM PERSON p "
-            + " WHERE p.STATUS = 1 "
-            + " AND p.PERSON_TYPE = 2 "
-            + " AND NOT EXISTS (SELECT PERSON_ID FROM PERSON_ACCESS WHERE PERSON_ID = p.PERSON_ID) ";
+                        + " FULL_NAME, POSITION, JOBDUTIES, STATUS "
+                        + " FROM PERSON p "
+                        + " WHERE p.STATUS = 1 "
+                        + " AND p.PERSON_TYPE = 2 "
+                        + " AND p.PERSON_ID IN (SELECT PERSON_ID FROM PERSON_ACCESS WHERE PERSON_ID = p.PERSON_ID AND (FROM_DATE > ? OR TO_DATE < ?) AND IS_DELETE = 0) "
+                        + " UNION ALL "
+                        + " SELECT PERSON_ID, COMP_ID, DEPT_ID, PERSON_CODE, "
+                        + " FULL_NAME, POSITION, JOBDUTIES, STATUS "
+                        + " FROM PERSON p "
+                        + " WHERE p.STATUS = 1 "
+                        + " AND p.PERSON_TYPE = 2 "
+                        + " AND NOT EXISTS (SELECT PERSON_ID FROM PERSON_ACCESS WHERE PERSON_ID = p.PERSON_ID) ";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = null;
@@ -901,14 +901,14 @@ public class Database extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     FaceRegisterInfo model = new FaceRegisterInfo(
-                        cursor.getString(0), //PERSON_ID
-                        cursor.getInt(1), //COMP_ID
-                        cursor.getInt(2), //DEPT_ID
-                        cursor.getString(3), //PERSON_CODE
-                        cursor.getString(4), //FULL_NAME
-                        cursor.getString(5), //POSITION
-                        cursor.getString(6), //JOBDUTIES
-                        cursor.getInt(7) //STATUS
+                            cursor.getString(0), //PERSON_ID
+                            cursor.getInt(1), //COMP_ID
+                            cursor.getInt(2), //DEPT_ID
+                            cursor.getString(3), //PERSON_CODE
+                            cursor.getString(4), //FULL_NAME
+                            cursor.getString(5), //POSITION
+                            cursor.getString(6), //JOBDUTIES
+                            cursor.getInt(7) //STATUS
                     );
                     lsData.add(model);
                 } while (cursor.moveToNext());
@@ -925,24 +925,24 @@ public class Database extends SQLiteOpenHelper {
     //Chỉ lấy danh sách nhân sự và khách còn hiệu lực
     public synchronized List<FaceRegisterInfo> searchPerson(String searchContent) {
         String selectQuery =
-                  " SELECT p.PERSON_ID, COMP_ID, DEPT_ID, PERSON_CODE, "
-                + " FULL_NAME, POSITION, JOBDUTIES, FACE_FEATURE, "
-                + " FACE_PATH, p.STATUS "
-                + " FROM PERSON p, FACE f "
-                + " WHERE p.PERSON_ID = f.PERSON_ID "
-                + " AND p.STATUS = 1 "
-                + " AND f.FACE_STATUS = 1 "
-                + " AND (p.PERSON_TYPE IS NULL OR p.PERSON_TYPE = 1) "
-                + " AND ('' = '" + searchContent + "' OR UPPER(p.FULL_NAME) LIKE UPPER('%" + searchContent + "%') OR UPPER(p.POSITION) LIKE UPPER('%" + searchContent + "%') OR UPPER(p.PERSON_CODE) = UPPER('" + searchContent + "'))"
-                + " UNION ALL "
-                + " SELECT p.PERSON_ID, COMP_ID, DEPT_ID, PERSON_CODE, "
-                + " FULL_NAME, POSITION, JOBDUTIES, '' as FACE_FEATURE, "
-                + " '' as FACE_PATH, p.STATUS "
-                + " FROM PERSON p"
-                + " WHERE p.STATUS = 1 "
-                + " AND p.PERSON_ID NOT IN (SELECT PERSON_ID FROM FACE f) "
-                + " AND (p.PERSON_TYPE IS NULL OR p.PERSON_TYPE = 1) "
-                + " AND ('' = '" + searchContent + "' OR UPPER(p.FULL_NAME) LIKE UPPER('%" + searchContent + "%') OR UPPER(p.POSITION) LIKE UPPER('%" + searchContent + "%') OR UPPER(p.PERSON_CODE) = UPPER('" + searchContent + "'))";
+                " SELECT p.PERSON_ID, COMP_ID, DEPT_ID, PERSON_CODE, "
+                        + " FULL_NAME, POSITION, JOBDUTIES, FACE_FEATURE, "
+                        + " FACE_PATH, p.STATUS "
+                        + " FROM PERSON p, FACE f "
+                        + " WHERE p.PERSON_ID = f.PERSON_ID "
+                        + " AND p.STATUS = 1 "
+                        + " AND f.FACE_STATUS = 1 "
+                        + " AND (p.PERSON_TYPE IS NULL OR p.PERSON_TYPE = 1) "
+                        + " AND ('' = '" + searchContent + "' OR UPPER(p.FULL_NAME) LIKE UPPER('%" + searchContent + "%') OR UPPER(p.POSITION) LIKE UPPER('%" + searchContent + "%') OR UPPER(p.PERSON_CODE) = UPPER('" + searchContent + "'))"
+                        + " UNION ALL "
+                        + " SELECT p.PERSON_ID, COMP_ID, DEPT_ID, PERSON_CODE, "
+                        + " FULL_NAME, POSITION, JOBDUTIES, '' as FACE_FEATURE, "
+                        + " '' as FACE_PATH, p.STATUS "
+                        + " FROM PERSON p"
+                        + " WHERE p.STATUS = 1 "
+                        + " AND p.PERSON_ID NOT IN (SELECT PERSON_ID FROM FACE f) "
+                        + " AND (p.PERSON_TYPE IS NULL OR p.PERSON_TYPE = 1) "
+                        + " AND ('' = '" + searchContent + "' OR UPPER(p.FULL_NAME) LIKE UPPER('%" + searchContent + "%') OR UPPER(p.POSITION) LIKE UPPER('%" + searchContent + "%') OR UPPER(p.PERSON_CODE) = UPPER('" + searchContent + "'))";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = null;
@@ -2725,6 +2725,7 @@ public class Database extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try {
+            Log.d("DEBUG-CANTEEN", "[GROUP_ACCESS] Query: GROUP_ID = " + groupId);
             cursor = db.query(GROUP_ACCESS, new String[]{
                             Constants.GA_ID,
                             Constants.GROUP_ID,
@@ -2736,7 +2737,13 @@ public class Database extends SQLiteOpenHelper {
                     Constants.GROUP_ID + " = ?", new String[]{String.valueOf(groupId)},
                     null, null, null);
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null) {
+                Log.d("DEBUG-CANTEEN", "[GROUP_ACCESS] cursor.getCount() = " + cursor.getCount());
+            } else {
+                Log.d("DEBUG-CANTEEN", "[GROUP_ACCESS] cursor is NULL");
+            }
+
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     GroupAccessDB model = new GroupAccessDB(
                             cursor.getInt(0),//GA_ID
@@ -2746,12 +2753,20 @@ public class Database extends SQLiteOpenHelper {
                             cursor.getInt(4), //ACCESS_TURN_TYPE
                             cursor.getInt(5) //ACCESS_TURN_NUMBER
                     );
+                    Log.d("DEBUG-CANTEEN", "[GROUP_ACCESS] Fetched: id=" + cursor.getInt(0)
+                            + " groupId=" + cursor.getInt(1)
+                            + " machineId=" + cursor.getInt(2)
+                            + " timeSegId=" + cursor.getInt(3)
+                            + " accessTurnType=" + cursor.getInt(4)
+                            + " accessTurnNumber=" + cursor.getInt(5));
                     // Add list.
                     lsData.add(model);
                 } while (cursor.moveToNext());
+            } else {
+                Log.d("DEBUG-CANTEEN", "[GROUP_ACCESS] No record found for groupId=" + groupId);
             }
         } catch (Exception ex) {
-            Log.e("GroupAccessDAO", "Error getListGroupAccessByGroup: " + ex.getMessage());
+            Log.e("DEBUG-CANTEEN", "Error getListGroupAccessByGroup: " + ex.getMessage());
         } finally {
             closeObject(cursor);
             closeObject(db);
@@ -2759,6 +2774,7 @@ public class Database extends SQLiteOpenHelper {
 
         return lsData;
     }
+
     //End group access
 
     //Start person access
@@ -2775,9 +2791,9 @@ public class Database extends SQLiteOpenHelper {
             values.put(Constants.IS_DELETE, model.getIsDelete());
             db.insert(PERSON_ACCESS, null, values);
         }catch (Exception ex){
-            Log.e(TAG, ex.getMessage());
+            Log.e(TAG, "addPersonAccess: " + ex.getMessage());
         }finally {
-            db.close();
+            closeObject(db);
         }
     }
 
@@ -2850,15 +2866,28 @@ public class Database extends SQLiteOpenHelper {
         return model;
     }
 
-    public synchronized List<PersonAccessDB> getListPersonAccess (String personId, int machineId) {
+    public synchronized List<PersonAccessDB> getListPersonAccess(String personId, int machineId) {
         List<PersonAccessDB> lsData = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
         int retryTime = 0;
         boolean needRetry = false;
 
-        try{
-            cursor = db.query(PERSON_ACCESS, new String[] {
+        try {
+            String selection;
+            String[] selectionArgs;
+
+            if (machineId == 0) {
+                selection = Constants.PERSON_ID + " =? AND " + Constants.IS_DELETE + " = 0";
+                selectionArgs = new String[]{personId};
+                Log.d("DEBUG-CHECK", "[PERSON_ACCESS] Query: personId=" + personId + " (NO MACHINE FILTER)");
+            } else {
+                selection = Constants.MACHINE_ID + " =? AND " + Constants.PERSON_ID + " =? AND " + Constants.IS_DELETE + " = 0";
+                selectionArgs = new String[]{String.valueOf(machineId), personId};
+                Log.d("DEBUG-CHECK", "[PERSON_ACCESS] Query: personId=" + personId + " machineId=" + machineId);
+            }
+
+            cursor = db.query(PERSON_ACCESS, new String[]{
                             Constants.PERSON_ACCESS_ID,
                             Constants.PERSON_ID,
                             Constants.MACHINE_ID,
@@ -2866,14 +2895,14 @@ public class Database extends SQLiteOpenHelper {
                             Constants.TO_DATE,
                             Constants.IS_DELETE
                     },
-                    Constants.MACHINE_ID + " =? AND " + Constants.PERSON_ID + " =? AND " + Constants.IS_DELETE + " = 0",
-                    new String[] { String.valueOf(machineId), personId },null, null, null);
-            if(cursor != null) {
-                Log.d("DEBUG-CHECK", "cursor.getCount()=" + cursor.getCount());
+                    selection,
+                    selectionArgs, null, null, null);
+
+            if (cursor != null) {
+                Log.d("DEBUG-CHECK", "[PERSON_ACCESS] cursor.getCount()=" + cursor.getCount());
             }
 
-            // Duyệt trên con trỏ, và thêm vào danh sách.
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     PersonAccessDB model = new PersonAccessDB(
                             cursor.getInt(0), //PERSON_ACCESS_ID
@@ -2883,27 +2912,42 @@ public class Database extends SQLiteOpenHelper {
                             cursor.getString(4), //TO_DATE
                             cursor.getInt(5) //IS_DELETE
                     );
-                    // Add list.
+                    Log.d("DEBUG-CHECK", "[PERSON_ACCESS] Fetched: id=" + " personId=" + model.getPersonId() + " machineId=" + model.getMachineId() +
+                            " from=" + model.getFromdate() + " to=" + model.getTodate() + " isDelete=" + model.getIsDelete());
                     lsData.add(model);
                 } while (cursor.moveToNext());
+            } else {
+                Log.d("DEBUG-CHECK", "[PERSON_ACCESS] No access record found for query.");
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
-
-            if(ex.getMessage().contains("Cannot perform this operation because the connection pool has been closed")){
+            if (ex.getMessage().contains("Cannot perform this operation because the connection pool has been closed")) {
                 needRetry = true;
             }
         } finally {
             closeObject(cursor);
             closeObject(db);
 
-            if(needRetry && retryTime < 3){
+            if (needRetry && retryTime < 3) {
                 retryTime++;
-                lsData = getListPersonAccess ( personId, machineId);
+                lsData = getListPersonAccess(personId, machineId);
                 Log.d(TAG, "Retry getListPersonAccess " + retryTime);
             }
         }
         return lsData;
+    }
+    public synchronized void deleteAllPersonGroupsByPersonId(String personId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.delete(PERSON_GROUP,
+                    Constants.PERSON_ID + " = ?",
+                    new String[] { personId });
+            Log.d(TAG, "Deleted all groups for personId: " + personId);
+        } catch (Exception ex) {
+            Log.e(TAG, "Error deleting person groups: " + ex.getMessage());
+        } finally {
+            closeObject(db);
+        }
     }
 
     public synchronized List<PersonAccessDB> getListPersonAccess (int machineId) {
@@ -3113,13 +3157,13 @@ public class Database extends SQLiteOpenHelper {
 
     public synchronized List<EventReportModel> getAllEventReport() {
         String selectQuery =
-            " SELECT   ACCESS_DATE," +
-            "    COUNT(*) AS TOTAL_RECORD," +
-            "    SUM(CASE WHEN STATUS = 2 THEN 1 ELSE 0 END) AS SYNC_RECORD," +
-            "    SUM(CASE WHEN STATUS = 1 THEN 1 ELSE 0 END) AS WAIT_RECORD" +
-            " FROM EVENT " +
-            " GROUP BY ACCESS_DATE " +
-            " ORDER BY ACCESS_DATE DESC";
+                " SELECT   ACCESS_DATE," +
+                        "    COUNT(*) AS TOTAL_RECORD," +
+                        "    SUM(CASE WHEN STATUS = 2 THEN 1 ELSE 0 END) AS SYNC_RECORD," +
+                        "    SUM(CASE WHEN STATUS = 1 THEN 1 ELSE 0 END) AS WAIT_RECORD" +
+                        " FROM EVENT " +
+                        " GROUP BY ACCESS_DATE " +
+                        " ORDER BY ACCESS_DATE DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = null;
@@ -4062,13 +4106,13 @@ public class Database extends SQLiteOpenHelper {
 
     public synchronized int countTotalStaffInvalid() {
         String selectQuery =
-              " SELECT COUNT(1) "
-            + " FROM PERSON p, FACE f "
-            + " WHERE p.PERSON_ID = f.PERSON_ID "
-            + " AND p.STATUS = 1 "
-            + " AND p.PERSON_TYPE = 1 "
-            + " AND f.FACE_STATUS = 1 "
-            + " AND length(f.FACE_FEATURE) = 0";
+                " SELECT COUNT(1) "
+                        + " FROM PERSON p, FACE f "
+                        + " WHERE p.PERSON_ID = f.PERSON_ID "
+                        + " AND p.STATUS = 1 "
+                        + " AND p.PERSON_TYPE = 1 "
+                        + " AND f.FACE_STATUS = 1 "
+                        + " AND length(f.FACE_FEATURE) = 0";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = null;
@@ -4091,12 +4135,12 @@ public class Database extends SQLiteOpenHelper {
 
     public synchronized int countTotalStaffInvalidNoFace() {
         String selectQuery =
-                  " SELECT COUNT(1) "
-                + " FROM PERSON p "
-                + " WHERE 1=1 "
-                + " AND p.STATUS = 1 "
-                + " AND p.PERSON_TYPE = 1 "
-                + " AND p.PERSON_ID NOT IN (SELECT PERSON_ID FROM FACE)";
+                " SELECT COUNT(1) "
+                        + " FROM PERSON p "
+                        + " WHERE 1=1 "
+                        + " AND p.STATUS = 1 "
+                        + " AND p.PERSON_TYPE = 1 "
+                        + " AND p.PERSON_ID NOT IN (SELECT PERSON_ID FROM FACE)";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = null;
@@ -4177,15 +4221,15 @@ public class Database extends SQLiteOpenHelper {
     public synchronized List<PersonReport> getAllPersonReport() {
         String selectQuery =
                 " SELECT p.PERSON_ID, p.COMP_ID, p.DEPT_ID, p.FULL_NAME, p.PERSON_CODE, p.POSITION, p.JOBDUTIES, p.PERSON_TYPE, length(f.FACE_FEATURE) FACE_FEATURE "
-                + " FROM PERSON p, FACE f "
-                + " WHERE p.PERSON_ID = f.PERSON_ID "
-                + " AND p.STATUS = 1 "
-                + " AND f.FACE_STATUS = 1"
-                + " UNION ALL"
-                + " SELECT p.PERSON_ID, p.COMP_ID, p.DEPT_ID, p.FULL_NAME, p.PERSON_CODE, p.POSITION, p.JOBDUTIES, p.PERSON_TYPE, 0 FACE_FEATURE "
-                + " FROM PERSON p"
-                + " WHERE p.STATUS = 1 "
-                + " AND p.PERSON_ID NOT IN (SELECT PERSON_ID FROM FACE)";
+                        + " FROM PERSON p, FACE f "
+                        + " WHERE p.PERSON_ID = f.PERSON_ID "
+                        + " AND p.STATUS = 1 "
+                        + " AND f.FACE_STATUS = 1"
+                        + " UNION ALL"
+                        + " SELECT p.PERSON_ID, p.COMP_ID, p.DEPT_ID, p.FULL_NAME, p.PERSON_CODE, p.POSITION, p.JOBDUTIES, p.PERSON_TYPE, 0 FACE_FEATURE "
+                        + " FROM PERSON p"
+                        + " WHERE p.STATUS = 1 "
+                        + " AND p.PERSON_ID NOT IN (SELECT PERSON_ID FROM FACE)";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = null;
@@ -4464,7 +4508,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.query(MEAL_BY_MONTH,
                 null,
-                 COL_MB_MONTH + "=? AND " + COL_MB_YEAR + "=? AND IS_DELETE=0",
+                COL_MB_MONTH + "=? AND " + COL_MB_YEAR + "=? AND IS_DELETE=0",
                 new String[]{ String.valueOf(month), String.valueOf(year)},
                 null,null,null);
         MealByMonthDB e = null;
@@ -4656,4 +4700,12 @@ public class Database extends SQLiteOpenHelper {
         if (rows == 0) db.insert(CANTEEN_MONTHLY_HISTORY, null, cv);
     }
 
+    public void deleteMealQuota(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.delete("MEAL_QUOTAS", "ID=?", new String[]{String.valueOf(id)});
+        } catch (Exception e) {
+            Log.e("Database", "Error deleting meal quota: " + e.getMessage());
+        }
+    }
 }

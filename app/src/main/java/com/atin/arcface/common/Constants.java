@@ -337,7 +337,7 @@ public class Constants {
     public static final String SATURDAY_END3   = "SATURDAY_END3";
     public static final String SATURDAY_START4 = "SATURDAY_START4";
     public static final String SATURDAY_END4   = "SATURDAY_END4";
-    public static final String GA_ID   = "GA_ID";
+    public static final String GA_ID   = "ID";
     public static final String START_DATE = "START_DATE";
     public static final String END_DATE = "END_DATE";
     public static final String FUNCTION = "FUNCTION";

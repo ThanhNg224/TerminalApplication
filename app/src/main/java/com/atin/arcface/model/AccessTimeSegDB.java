@@ -1,5 +1,7 @@
 package com.atin.arcface.model;
 
+import java.util.Date;
+
 public class AccessTimeSegDB {
 
     private int id;

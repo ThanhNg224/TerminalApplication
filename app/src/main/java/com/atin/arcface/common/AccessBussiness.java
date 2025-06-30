@@ -144,32 +144,53 @@ public class AccessBussiness {
 //    }
 
     private boolean offlineCanteenCheck(String personId, String deviceCode, CompareResult compareResult) {
+        Log.d("CANTEEN-OFFLINE", "offlineCanteenCheck START: personId=" + personId + ", deviceCode=" + deviceCode);
+
         checkCanteenPermission(personId, deviceCode, compareResult);
 
+        Log.d("CANTEEN-OFFLINE", "SummaryCode=" + compareResult.getSummaryCode() +
+                ", DetailCode=" + compareResult.getDetailCode() +
+                ", Note=" + compareResult.getNote());
+
+        // Gán personType là dạng mô tả lỗi (human readable), không phải code lỗi
         if (!ErrorCode.COMMON_ACCESS_VALID.equals(compareResult.getSummaryCode())) {
-            if (ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_DAY.equals(compareResult.getSummaryCode())) {
-                compareResult.setPersonType("Hết lượt");
-            } else if (ErrorCode.COMMON_ACCESS_OUT_OF_SERVICE_TIME.equals(compareResult.getSummaryCode())) {
-                compareResult.setPersonType("Ngoài giờ");
-            } else if (ErrorCode.COMMON_EXPIRED.equals(compareResult.getSummaryCode())) {
-                compareResult.setPersonType("Quyền truy cập hết hạn");
-            } else {
-                compareResult.setPersonType("Không có quyền truy cập");
-            }
+            // Mapping mã lỗi sang mô tả (nếu muốn show UI đẹp)
+            String typeDesc = getTypeDescFromSummaryCode(compareResult.getSummaryCode());
+            compareResult.setPersonType(typeDesc);
+
+            Log.d("CANTEEN-OFFLINE", "Set personType = " + typeDesc);
 
             setPersonMeta(compareResult, personId);
+
+            Log.d("CANTEEN-OFFLINE", "Access NOT valid, processResult & return false");
             SingletonObject.getInstance(context).getMainActivity().processResult(compareResult, false);
             return false;
-
         }
 
+        // Hợp lệ
         compareResult.setPersonType("Hợp lệ");
         setPersonMeta(compareResult, personId);
+        Log.d("CANTEEN-OFFLINE", "Access VALID, continue");
         return true;
-
     }
 
-
+    // Mapping mã lỗi sang human readable (ví dụ)
+    private String getTypeDescFromSummaryCode(String code) {
+        switch (code) {
+            case ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_DAY:
+                return "Hết lượt trong ngày";
+            case ErrorCode.COMMON_ACCESS_OUT_OF_SERVICE_TIME:
+                return "Ngoài giờ phục vụ";
+            case ErrorCode.COMMON_EXPIRED:
+                return "Quyền truy cập hết hạn";
+            case ErrorCode.COMMON_NOT_ACCESS:
+                return "Không có quyền truy cập";
+            case ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_MONTH:
+                return "Hết lượt trong tháng";
+            default:
+                return "Lỗi: " + code;
+        }
+    }
 
     public AccessResult checkPersonNotFound(boolean isMask, float temperature, int machineType) {
         prefCheckMask = pref.getBoolean(Constants.PREF_CHECK_MASK, false);
@@ -584,6 +605,12 @@ public class AccessBussiness {
 
     private static boolean compareTimeSeg(Date dtStart1, Date dtEnd1, Date dtStart2, Date dtEnd2, Date dtStart3, Date dtEnd3, Date dtStart4, Date dtEnd4) throws Exception {
         Date dtCurrentTime = Calendar.getInstance().getTime();
+        Log.d("TRACE-CANTEEN", "compareTimeSeg input: " +
+                dtStart1 + " - " + dtEnd1 + " | " +
+                dtStart2 + " - " + dtEnd2 + " | " +
+                dtStart3 + " - " + dtEnd3 + " | " +
+                dtStart4 + " - " + dtEnd4);
+
         if (dtCurrentTime.after(dtStart1) && dtCurrentTime.before(dtEnd1)) {
             return true;
         }
@@ -863,12 +890,9 @@ public class AccessBussiness {
     }
 
     public void checkCanteenPermission(String personId, String deviceCode, CompareResult compareResult) {
-        boolean blOutOffServiceTime = false;
-        boolean blNotAccessPermission = false;
-        List<Integer> lsAllGroup = new ArrayList<>();
-        List<Integer> lsGroupValid = new ArrayList<>();
+        Log.d("CANTEEN-FLOW", "START checkCanteenPermission: personId=" + personId + ", deviceCode=" + deviceCode);
 
-        //Check khai báo
+        // 1. Kiểm tra nhân viên tồn tại
         PersonDB personEntity = database.getPerson(personId);
         if (personEntity == null) {
             compareResult.setNote("ID nhân viên không tồn tại");
@@ -876,7 +900,7 @@ public class AccessBussiness {
             compareResult.setDetailCode(ErrorCode.COMMON_FACE_NOT_FOUND);
             return;
         }
-
+        // 2. Kiểm tra trạng thái nhân viên
         if (personEntity.getStatus() == 0) {
             compareResult.setNote("TÀI KHOẢN NGỪNG HOẠT ĐỘNG");
             compareResult.setSummaryCode(ErrorCode.COMMON_ACCOUNT_SUPPEND);
@@ -884,60 +908,44 @@ public class AccessBussiness {
             return;
         }
 
-// Kiểm tra thời gian làm việc
-        MachineDB thisDevice = SingletonObject.getInstance(context).getMainActivity().getThisDevice();
-        List<PersonAccessDB> lsPersonAccess = database.getListPersonAccess(
-                personEntity.getPersonId(), thisDevice.getCompId());
-
-        boolean endOfWorkTime = true;
-        Date dtNow = Calendar.getInstance().getTime();
-
+        // 3. Kiểm tra quyền truy cập (PERSON_ACCESS)
+        List<PersonAccessDB> lsPersonAccess = database.getListPersonAccess(personId, 0);
+        Date now = Calendar.getInstance().getTime();
+        boolean hasValidAccess = false;
         if (lsPersonAccess != null && !lsPersonAccess.isEmpty()) {
             for (PersonAccessDB pa : lsPersonAccess) {
-                Date dtWorkFrom = null;
-                Date dtWorkTo = null;
-
-                if (pa.getFromdate() != null && !pa.getFromdate().isEmpty()) {
-                    dtWorkFrom = StringUtils.convertStringToDate(pa.getFromdate(), "yyyy-MM-dd HH:mm:ss");
-                    if (dtWorkFrom != null && dtWorkFrom.after(dtNow)) {
-                        continue;
-                    }
-                }
-                if (pa.getTodate() != null && !pa.getTodate().isEmpty()) {
-                    dtWorkTo = StringUtils.convertStringToDate(pa.getTodate(), "yyyy-MM-dd HH:mm:ss");
-                    if (dtWorkTo != null && dtWorkTo.before(dtNow)) {
-                        continue;
-                    }
-                }
-                // Nếu hợp lệ thì break ngay, bỏ qua các vòng for tiếp theo
-                endOfWorkTime = false;
+                Date dtFrom = StringUtils.convertStringToDate(pa.getFromdate(), "yyyy-MM-dd HH:mm:ss");
+                Date dtTo = StringUtils.convertStringToDate(pa.getTodate(), "yyyy-MM-dd HH:mm:ss");
+                // fromdate > now: chưa đến ngày hiệu lực -> bỏ qua
+                if (dtFrom != null && dtFrom.after(now)) continue;
+                // todate < now: đã hết hạn -> bỏ qua
+                if (dtTo != null && dtTo.before(now)) continue;
+                // Chỉ cần có 1 record hợp lệ là pass
+                hasValidAccess = true;
                 break;
             }
         }
-
-        if (endOfWorkTime) {
-            // Log cảnh báo khi bị hết hạn truy cập (nếu muốn giữ lại 1 log duy nhất)
-            Log.w("CANTEEN", "Access expired for personId=" + personEntity.getPersonId() + ", machineId=" + thisDevice.getCompId());
+        if (!hasValidAccess) {
             compareResult.setNote("QUYỀN TRUY CẬP HẾT HẠN");
             compareResult.setSummaryCode(ErrorCode.COMMON_EXPIRED);
             compareResult.setDetailCode(ErrorCode.COMMON_EXPIRED);
             return;
         }
 
-
-
+        // 4. Kiểm tra nhóm truy cập (group)
         List<PersonGroupDB> lsPersonGroup = database.getListPersonGroup(personId);
-        if (lsPersonGroup.isEmpty()) {
+        if (lsPersonGroup == null || lsPersonGroup.isEmpty()) {
             compareResult.setNote("Nhóm truy cập nhân viên không hợp lệ");
             compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
             compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
             return;
         }
-
-        for (PersonGroupDB personGroup : lsPersonGroup) {
-            lsAllGroup.add(personGroup.getGroupId());
+        List<Integer> lsAllGroup = new ArrayList<>();
+        for (PersonGroupDB group : lsPersonGroup) {
+            lsAllGroup.add(group.getGroupId());
         }
 
+        // 5. Kiểm tra thiết bị
         MachineDB machine = database.getMachineByImei(deviceCode);
         if (machine == null) {
             compareResult.setNote("Thông tin thiết bị không tồn tại " + deviceCode);
@@ -946,78 +954,99 @@ public class AccessBussiness {
             return;
         }
 
-        List<GroupAccessDB> lsGroupAccessCanteenValid = new ArrayList<>();
+// 6. Kiểm tra group access hợp lệ (phải có ít nhất 1 group access đúng máy + đúng giờ)
+        boolean blOutOffServiceTime = false;
+        boolean blNotAccessPermission = false;
+        List<GroupAccessDB> lsGroupAccessValid = new ArrayList<>();
+
+        Log.d("CANTEEN-DEBUG", "Máy hiện tại: machineId = " + machine.getMachineId());
+        Log.d("CANTEEN-DEBUG", "DANH SÁCH NHÓM của user: " + lsAllGroup);
+
         for (Integer groupId : lsAllGroup) {
-            List<GroupAccessDB> lsAllGroupAccess = database.getListGroupAccessByGroup(groupId);
-            if (lsAllGroupAccess.isEmpty() && lsGroupValid.isEmpty()) {
+            List<GroupAccessDB> lsGroupAccess = database.getListGroupAccessByGroup(groupId);
+            Log.d("CANTEEN-DEBUG", "---- groupId=" + groupId + " có " +
+                    (lsGroupAccess != null ? lsGroupAccess.size() : 0) + " groupAccess");
+
+            if (lsGroupAccess == null || lsGroupAccess.isEmpty()) {
+                Log.d("CANTEEN-DEBUG", "    => Không có groupAccess nào cho groupId=" + groupId);
                 blNotAccessPermission = true;
                 continue;
             }
+            for (GroupAccessDB groupAccess : lsGroupAccess) {
+                Log.d("CANTEEN-DEBUG", "    groupAccess.id=" + groupAccess.getId()
+                        + " | groupId=" + groupAccess.getGroupId()
+                        + " | machineId=" + groupAccess.getMachineId()
+                        + " | timeSegId=" + groupAccess.getTimeSegId()
+                        + " | accessTurnType=" + groupAccess.getAccessTurnType()
+                        + " | accessTurnNumber=" + groupAccess.getAccessTurnNumber());
 
-            for (GroupAccessDB groupAccess : lsAllGroupAccess) {
                 if (machine.getMachineId() != groupAccess.getMachineId()) {
-                    blNotAccessPermission = true;
-                    continue;
-                }
-
-                if (groupAccess.getAccessTurnType() == null || groupAccess.getAccessTurnType() == 0 ||
-                        groupAccess.getAccessTurnNumber() == null || groupAccess.getAccessTurnNumber() == 0) {
+                    Log.d("CANTEEN-DEBUG", "    => [SKIP] Không khớp máy! (current=" + machine.getMachineId()
+                            + ", groupAccess=" + groupAccess.getMachineId() + ")");
                     blNotAccessPermission = true;
                     continue;
                 }
 
                 int timeSegId = groupAccess.getTimeSegId();
-                AccessTimeSegDB accessTimeSegEntity = database.getAccessTimeSeg(timeSegId);
-                if (accessTimeSegEntity == null) {
+                AccessTimeSegDB timeSeg = database.getAccessTimeSeg(timeSegId);
+
+                if (timeSeg == null) {
+                    Log.d("CANTEEN-DEBUG", "    => [SKIP] Không tìm thấy time segment id: " + timeSegId);
+                    blOutOffServiceTime = true;
+                    continue;
+                }
+                AccessTimeSegDBConvert timeSegObj = ParseModel.parseToTimeSegModel(timeSeg);
+                boolean timeValid = checkExistTime(timeSegObj);
+                Log.d("CANTEEN-DEBUG", "        checkExistTime timeSegId=" + timeSegId + " -> " + timeValid);
+
+                if (!timeValid) {
+                    Log.d("CANTEEN-DEBUG", "    => [SKIP] Ngoài giờ phục vụ!");
                     blOutOffServiceTime = true;
                     continue;
                 }
 
-                AccessTimeSegDBConvert accessTimeSeg = ParseModel.parseToTimeSegModel(accessTimeSegEntity);
-                if (!checkExistTime(accessTimeSeg)) {
-                    blOutOffServiceTime = true;
-                    continue;
-                }
+                // Đủ quyền + đúng máy + đúng giờ
+                Log.d("CANTEEN-DEBUG", "    => [PASS] groupAccess HỢP LỆ! Thêm vào lsGroupAccessValid!");
+                lsGroupAccessValid.add(groupAccess);
 
-                lsGroupValid.add(groupId);
-                lsGroupAccessCanteenValid.add(groupAccess);
-
+                // Khi đã có hợp lệ, reset các flag lỗi này lại:
                 blOutOffServiceTime = false;
                 blNotAccessPermission = false;
             }
         }
+        Log.d("CANTEEN-DEBUG", "TỔNG SỐ groupAccess hợp lệ tìm được: " + lsGroupAccessValid.size());
 
-        if (lsGroupValid.isEmpty()) {
+        if (lsGroupAccessValid.isEmpty()) {
             if (blOutOffServiceTime) {
+                Log.d("CANTEEN-DEBUG", "==> Lỗi: Ngoài giờ phục vụ!");
                 compareResult.setNote("Ngoài giờ phục vụ");
                 compareResult.setSummaryCode(ErrorCode.COMMON_ACCESS_OUT_OF_SERVICE_TIME);
                 compareResult.setDetailCode(ErrorCode.COMMON_ACCESS_OUT_OF_SERVICE_TIME);
-                return;
-            }
-
-            if (blNotAccessPermission) {
+            } else if (blNotAccessPermission) {
+                Log.d("CANTEEN-DEBUG", "==> Lỗi: Không có quyền thực hiện (Không có groupAccess hợp lệ cho máy này)!");
                 compareResult.setNote("Không có quyền thực hiện");
                 compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
                 compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
-                return;
+            } else {
+                Log.d("CANTEEN-DEBUG", "==> Lỗi: Phân quyền canteen không hợp lệ!");
+                compareResult.setNote("Phân quyền canteen không hợp lệ");
+                compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
+                compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
             }
-
-            compareResult.setNote("Không có quyền truy cập hợp lệ");
-            compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
-            compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
             return;
+        } else {
+            Log.d("CANTEEN-DEBUG", "==> Đã tìm thấy ÍT NHẤT 1 groupAccess hợp lệ! Cho pass bước này.");
         }
 
-        MealByMonthDB mealByMonthEntity = database.getMealQuota(Calendar.getInstance().get(Calendar.MONTH) + 1,
-                Calendar.getInstance().get(Calendar.YEAR));
 
+        // 7. Kiểm tra cấu hình số lượt ăn trong tháng
+        MealByMonthDB mealByMonthEntity = database.getMealQuota(Calendar.getInstance().get(Calendar.MONTH) + 1, Calendar.getInstance().get(Calendar.YEAR));
         if (mealByMonthEntity == null) {
             compareResult.setNote("Thông tin cấu hình số lượt ăn trong tháng không tồn tại");
             compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
             compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
             return;
         }
-
         int monthUsed = database.countMonthly(personId, Calendar.getInstance().get(Calendar.MONTH) + 1, Calendar.getInstance().get(Calendar.YEAR));
         if (monthUsed >= mealByMonthEntity.getEatCount()) {
             compareResult.setNote("Đã sử dụng hết số lượt ăn trong tháng");
@@ -1026,31 +1055,43 @@ public class AccessBussiness {
             return;
         }
 
+        // 8. Kiểm tra lượt ăn/ngày cho từng group access hợp lệ
+        boolean isUsedUp = false;
         int dailyUsed = database.countDaily(personId, StringUtils.currentDateSQLiteformat());
-        for (GroupAccessDB groupAccessEntity : lsGroupAccessCanteenValid) {
-            if (groupAccessEntity.getAccessTurnType() == null || groupAccessEntity.getAccessTurnType() == 0) {
+        for (GroupAccessDB groupAccess : lsGroupAccessValid) {
+            if (groupAccess.getAccessTurnType() == null || groupAccess.getAccessTurnType() == 0) {
                 compareResult.setNote("Thông tin hợp lệ");
+                compareResult.setRemainTurnNumber(0);
                 compareResult.setSummaryCode(ErrorCode.COMMON_ACCESS_VALID);
                 compareResult.setDetailCode(ErrorCode.COMMON_ACCESS_VALID);
                 return;
             }
-
-            Integer totalAccessTimeNumber = groupAccessEntity.getAccessTurnNumber();
-            if (totalAccessTimeNumber == null || totalAccessTimeNumber == 0) continue;
-
+            Integer totalAccessTimeNumber = groupAccess.getAccessTurnNumber();
+            if (totalAccessTimeNumber == null || totalAccessTimeNumber == 0) {
+                isUsedUp = true;
+                continue;
+            }
             if (dailyUsed < totalAccessTimeNumber) {
+                int remainNumber = totalAccessTimeNumber - dailyUsed;
                 compareResult.setNote("Thông tin hợp lệ");
+                compareResult.setRemainTurnNumber(remainNumber);
                 compareResult.setSummaryCode(ErrorCode.COMMON_ACCESS_VALID);
                 compareResult.setDetailCode(ErrorCode.COMMON_ACCESS_VALID);
-                compareResult.setRemainTurnNumber(totalAccessTimeNumber - dailyUsed);
                 return;
             }
+            isUsedUp = true;
+        }
+        if (isUsedUp) {
+            compareResult.setNote("Đã sử dụng hết số lượt ăn trong ngày");
+            compareResult.setSummaryCode(ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_DAY);
+            compareResult.setDetailCode(ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_DAY);
+            return;
         }
 
-        compareResult.setNote("Đã sử dụng hết số lượt ăn trong ngày");
-        compareResult.setSummaryCode(ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_DAY);
-        compareResult.setDetailCode(ErrorCode.COMMON_CANTEEN_USED_UP_TURN_ACCESS_DAY);
+        // Fallback cuối cùng
+        compareResult.setNote("Không có quyền thực hiện");
+        compareResult.setSummaryCode(ErrorCode.COMMON_NOT_ACCESS);
+        compareResult.setDetailCode(ErrorCode.COMMON_NOT_ACCESS);
     }
-
 
 }
